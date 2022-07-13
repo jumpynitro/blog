@@ -1,1 +1,3 @@
-# blog
+---
+permalink: /index.html
+---
