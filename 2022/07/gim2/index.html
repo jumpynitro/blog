@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Generative-inference models: Theory and empirical analysis (Part II)",
+  
+  "image": "https://jumpynitro.github.io/blog/my_images/img/GIM2/MIinf.png",
+  
+  "datePublished": "2022-07-06T00:00:00Z",
+  "dateModified": "2022-07-06T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "Nicolás Astorga",
+    
+    "image": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jumpynitro.github.io\/blog\/2022\/07\/gim2\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    }
+    
+  },
+  "description": "Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="Nicolás Astorga">
+<meta name="keywords" content="">
+<meta name="description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+
+
+<meta property="og:description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Generative-inference models: Theory and empirical analysis (Part II)">
+<meta name="twitter:title" content="Generative-inference models: Theory and empirical analysis (Part II)">
+<meta property="og:url" content="https://jumpynitro.github.io/blog/2022/07/gim2/">
+<meta property="twitter:url" content="https://jumpynitro.github.io/blog/2022/07/gim2/">
+<meta property="og:site_name" content="">
+<meta property="og:description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+<meta name="twitter:description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2022-07-06T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-07-06T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Generative models">
+    
+      <meta property="article:section" content="representation learning">
+    
+      <meta property="article:section" content="GANs">
+    
+      <meta property="article:section" content="VAEs">
+    
+      <meta property="article:section" content="work in progress">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/img/GIM2/MIinf.png">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/img/GIM2/MIinf.png">
+
+
+    <title>Generative-inference models: Theory and empirical analysis (Part II)</title>
+
+    <link rel="icon" href="https://jumpynitro.github.io/blog/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jumpynitro.github.io/blog/2022/07/gim2/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jumpynitro.github.io/blog/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="2">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jumpynitro.github.io/blog/" aria-label="Go to homepage"></a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jumpynitro.github.io/blog/#about" aria-label="Open the link: /#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="2">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jumpynitro.github.io/blog/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Nicolás Astorga</h4>
+        
+          <h5 class="sidebar-profile-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/" title="Posts">
+    
+      <i class="sidebar-button-icon fas fal fa-shapes" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/about" title="About me">
+    
+      <i class="sidebar-button-icon fas fal fa-user-circle" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/research" title="Research">
+    
+      <i class="sidebar-button-icon fas fal fa-book-open" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Research</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/industry" title="Eng. work">
+    
+      <i class="sidebar-button-icon fas fal fa-laptop" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Eng. work</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/jumpynitro" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/NicolasAstorgaCV.pdf" title="CV">
+    
+      <i class="sidebar-button-icon fas fal fa-user-graduate" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">CV</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="2"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      Generative-inference models: Theory and empirical analysis (Part II)
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-07-06T00:00:00Z">
+        
+  July 6, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/generative-models">Generative models</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/representation-learning">representation learning</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/gans">GANs</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/vaes">VAEs</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/work-in-progress">work in progress</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <p>The work presented in this vlog is still in progress and summarizes my thesis&rsquo;s chapters 5 and 6.</p>
+<h3 id="background">Background</h3>
+<p>In this vlog we present a general formulation for generative-inference models from the perspective of  representation learning. This formulation is obtained using the information theoretic concept of mutual information (MI). Shannon&rsquo;s MI between the observable variables $x \in \mathcal{X}$ and latent variables $z \in \mathcal{Z}$ is defined as</p>
+<p>$$\mathcal{I}_r(x,z) = \int_\mathcal{X} \int_\mathcal{Z} r(x,z) \log \frac{r(x,z)}{r(x)r(z)} ,dx ,dz $$</p>
+<p>where $r(x,z)$ is the joint distribution of $x$ and $z$. The definition of MI depends on the choice of the joint distribution. In this case we have two definitions of MI, one for the joint distribution of the inference model $q(x,z)$ and one for the generative model $p(x,z)$. In what follows we will use the sub-indexes $q$ and $p$.</p>
+<h3 id="representation-learning-in-generative-inference-models">Representation learning in generative-inference models</h3>
+<p>To associate current generive-inference model with their representation learning capabilities.</p>
+<p>We start by writting the MI of the inference model $q(x,z) = q(x|z)q(z)$ as follows</p>
+<p>$$
+\mathcal{I}_q(x,z) ~=~  -\mathcal{L}_q^{\text{model}} + \Delta \mathcal{I}_q^{\text{model}} ~~~~~~~~~~(1)
+$$</p>
+<p>where the loss function of the model is given by</p>
+<p>$$
+\mathcal{L}_q^{\text{model}} = \mathbb{E}_{q(x,z)}[-\log p(x|z)] + \boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)}}, ~~~~~~~~~~(2)
+$$</p>
+<p>and the mutual <strong>information gap</strong> of the generative-inference model loss function and the MI of the inference model is given by</p>
+<p>$$
+\Delta \mathcal{I}_q^{\text{model}} = \boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)}} + h_q(x) + \mathbb{E}_{q(z)}[D_{KL}(q(x|z) || p(x|z) )]. ~~~~~~~~~~(3)
+$$</p>
+<p>The terms collected in $\mathcal{L}_q^{\text{model}}$ correspond to the loss function&rsquo;s components of the generative-inference model. The loss function is composed by the likelihood and the term $\mathcal{R}_q^{\text{model}}$ which represents a set of restrictions (regularization) for the distributions of the model. This restriction vary depending on the model and is also part of the MI gap $\Delta \mathcal{I}_q^{\text{model}}$. Later we will recognize this restriction term in generative-inference models from the literature to show that their loss functions comply with this formulation.</p>
+<p>The decomposition for the generative model distribution is symetrical. The term $\boldsymbol{{\mathcal{R}_r^{\text{model}} (x,z)}} \geq 0$ is a restriction over the distributions of the model and is included in both $\mathcal{L}_r^{\text{model}}$ and $\Delta \mathcal{I}_r^{\text{model}}$. When  $\mathcal{L}_r^{\text{model}}$ is minimized the restriction is also minimized. A small value for the restriction is desirable as it reduces the gap. I want to the gap to be low since helps the model to be closer to $\boldsymbol{\mathcal{I}_q(x,z)}$, which is a measure of correlation between to variables.</p>
+<p>In conclusion, from a theoretical point of view we need two things:</p>
+<ul>
+<li>A high mutual information $\boldsymbol{\mathcal{I}_q(x,z) }$, because the mutual information represent a measure of correlation.</li>
+<li>A low gap $\boldsymbol{ \Delta \mathcal{I}_q^{\text{model}}}$, because $\boldsymbol{ -\mathcal{L}_q^{\text{model}} }$ is a bound of $\boldsymbol{\mathcal{I}_q(x,z) }$.</li>
+</ul>
+<p>In the following we show a diagram of the decomposition of the mutual information of the inference model.</p>
+<p><img src="https://jumpynitro.github.io/blog/img/GIM2/MIinf.png" alt="inference_model"></p>
+<h3 id="associating-generative-inference-models-with-mutual-information">Associating generative-inference models with mutual information</h3>
+<p>In the literature $\boldsymbol{{\mathcal{R}_r^{\text{model}} (x,z)}}$ has been utilized to match some of the distributions of the inference model and/or generative model in addition to the decoder likelihood $\mathbb{E}_{q(x,z)}[\log p(x|z)]$ or encoder likelihood $\mathbb{E}_{p(x,z)}[\log q(z|x)]$. The only thing that change between models is the <strong>restriction used</strong>. In the following we showed what generative-inference models fit in this decomposition.</p>
+<p><img src="https://jumpynitro.github.io/blog/img/GIM2/tab_restriction.png" alt="tab_restriction">
+Restrictions of different generative-inference models. The  $\mathcal{D}$ can be replaced for any adversarial training. The variable $x' \in \mathcal{X}'$ refers to data in a high dimensional space.</p>
+<h3 id="what-models-are-better-for-representation-learning">What models are better for representation learning?</h3>
+<p>We have associated generative-inference model with the concept of mutual information. But what loss function of the models are useful for representation learning?.</p>
+<p>To answer this let me write the mutual information in slightly different. In the following, we will analyze representation learning capabilites for models that optimize a bound of the inference model mutual information (the analysis for the MI generative model is symetrical).</p>
+<p>We can write the mutual information of the inference model as:
+$$
+\mathcal{I}_q(x,z) ~=~  \mathbb{E}_{q(x)}[ D_{KL}(q(z|x)||p(z))] - D_{KL}(q(z)||p(z)),   ~~~~~~~~~~(4)
+$$</p>
+<p>Taking in consideration Eq. (4) we can note that for representation learning minimizing the restricction $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z)||p(z))}$ is better than minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z|x)||p(z))}$.</p>
+<ul>
+<li>Minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z)||p(z))}$ like WAE maximizes the inference model MI by reducing the left hand side in Eq. (4), moreover it minimizes the MI gap in Eq. (3).</li>
+<li>Minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z|x)||p(z))}$ like VAE minimize the inference model MI by reducing the right hand side in Eq. (4). In consequence reducing  MI gap in Eq. (3) will reduce the MI of the inference model.</li>
+</ul>
+<p>The analysis is symetrical for models that bound generative model.</p>
+<h3 id="trade-off-between-representation-learning-and-generation">Trade off between representation learning and generation</h3>
+<p>It seems that VAE are worst than WAE models. But we note  that exists a trafe-off between generation and representation which is associated to the prior that we used. We will consider the common prior $p(z)=\mathcal{N}(0, 1)$. We note that <strong>models that compress all the information in the prior have better generative learning capabilities but worst representation learning capabilities ant viceversa</strong>.</p>
+<p>This occurs because if all input information is compressed in the latent space, in some part of the latent space different classes will be close.</p>
+<p>Under this thinking generative models, which have better generative capabilities than VAEs, should have worst representation learning capabilities. VAEs should have better generative capabilities than WAEs since the entropy term $h(z|x)$ helps them to cover information of the input in the prior. A diagram of this thinking in the following:</p>
+<p><img src="https://jumpynitro.github.io/blog/img/GIM2/entropy.png" alt="entropy"></p>
+<p>We observed this behaviour empirically (MNIST), $\tilde{\mathcal{I}}_q(x,z)$ is computed approximating $q(z)$ as Gaussian distribution:
+<img src="https://jumpynitro.github.io/blog/img/GIM2/LP.png" alt="LP">
+<img src="https://jumpynitro.github.io/blog/img/GIM2/FID.png" alt="FID"></p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/mpcc/" data-tooltip="MPCC: Matching priors and conditional for clustering" aria-label="NEXT: MPCC: Matching priors and conditional for clustering">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/gim1/" data-tooltip="Generative-inference models: Theory and empirical analysis (Part I)" aria-label="PREVIOUS: Generative-inference models: Theory and empirical analysis (Part I)">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jumpynitro.github.io\/blog\/2022\/07\/gim2\/';
+        
+          this.page.identifier = '\/2022\/07\/gim2\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'hugo-tranquilpeak-theme';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2022 Nicolás Astorga. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/mpcc/" data-tooltip="MPCC: Matching priors and conditional for clustering" aria-label="NEXT: MPCC: Matching priors and conditional for clustering">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/gim1/" data-tooltip="Generative-inference models: Theory and empirical analysis (Part I)" aria-label="PREVIOUS: Generative-inference models: Theory and empirical analysis (Part I)">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="2">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fgim2%2F" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fgim2%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fgim2%2F" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span>Share on Linkedin</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Nicolás Astorga</h4>
+    
+      <div id="about-card-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Research Scientist / ML Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        Chile
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jumpynitro.github.io/blog/my_images/universe.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jumpynitro.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: { linebreaks: { automatic: true } },
+      tex2jax: { inlineMath: [ ['$', '$'], ['\\(','\\)'] ], displayMath: [ ['$$','$$'], ['\\[', '\\]'] ], processEscapes: false },
+      messageStyle: 'none'
+    });
+  </script>
+
+
+
+    
+  </body>
+</html>
+

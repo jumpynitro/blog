@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gaussian process on </title>
+    <link>https://jumpynitro.github.io/blog/categories/gaussian-process/</link>
+    <description>Recent content in Gaussian process on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jumpynitro.github.io/blog/categories/gaussian-process/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AGP: Amortized Gaussian Process</title>
+      <link>https://jumpynitro.github.io/blog/2022/07/agp/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/2022/07/agp/</guid>
+      <description>Amortized Gaussian Process is a model that amortizes the computation of a Gaussian Process. With this model we can use autoencoder for time series with variable length and irregular sampling.</description>
+    </item>
+    
+  </channel>
+</rss>

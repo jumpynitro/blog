@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on </title>
+    <link>https://jumpynitro.github.io/blog/categories/</link>
+    <description>Recent content in Categories on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 07 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jumpynitro.github.io/blog/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>clustering</title>
+      <link>https://jumpynitro.github.io/blog/categories/clustering/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/clustering/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ECCV2020</title>
+      <link>https://jumpynitro.github.io/blog/categories/eccv2020/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/eccv2020/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GANs</title>
+      <link>https://jumpynitro.github.io/blog/categories/gans/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/gans/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Generative models</title>
+      <link>https://jumpynitro.github.io/blog/categories/generative-models/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/generative-models/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>VAEs</title>
+      <link>https://jumpynitro.github.io/blog/categories/vaes/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/vaes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>representation learning</title>
+      <link>https://jumpynitro.github.io/blog/categories/representation-learning/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/representation-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>work in progress</title>
+      <link>https://jumpynitro.github.io/blog/categories/work-in-progress/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/work-in-progress/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Gaussian process</title>
+      <link>https://jumpynitro.github.io/blog/categories/gaussian-process/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/gaussian-process/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>regression</title>
+      <link>https://jumpynitro.github.io/blog/categories/regression/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Time series</title>
+      <link>https://jumpynitro.github.io/blog/categories/time-series/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/time-series/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>category</title>
+      <link>https://jumpynitro.github.io/blog/categories/category/</link>
+      <pubDate>Sun, 03 Jul 2022 15:59:37 -0400</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/category/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>subcategory</title>
+      <link>https://jumpynitro.github.io/blog/categories/subcategory/</link>
+      <pubDate>Sun, 03 Jul 2022 15:59:37 -0400</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/subcategory/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Anomaly detection</title>
+      <link>https://jumpynitro.github.io/blog/categories/anomaly-detection/</link>
+      <pubDate>Sun, 03 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/anomaly-detection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Astroinformatic</title>
+      <link>https://jumpynitro.github.io/blog/categories/astroinformatic/</link>
+      <pubDate>Sun, 03 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/categories/astroinformatic/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

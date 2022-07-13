@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "LGAd: Lightcurve generative model for anomaly detection",
+  
+  "image": "https://jumpynitro.github.io/blog/my_images/img/LGAd/LCVaDE-1.png",
+  
+  "datePublished": "2022-07-03T00:00:00Z",
+  "dateModified": "2022-07-03T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "Nicolás Astorga",
+    
+    "image": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jumpynitro.github.io\/blog\/2022\/07\/lgad\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    }
+    
+  },
+  "description": "We present LGAd, a variational autoencoder for anomaly detection in time series. Anomaly detection is fundamental task in astroinformatics that could allows us to find new astronomical objects not observed in the past.",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="Nicolás Astorga">
+<meta name="keywords" content="">
+<meta name="description" content="We present LGAd, a variational autoencoder for anomaly detection in time series. Anomaly detection is fundamental task in astroinformatics that could allows us to find new astronomical objects not observed in the past.">
+
+
+<meta property="og:description" content="We present LGAd, a variational autoencoder for anomaly detection in time series. Anomaly detection is fundamental task in astroinformatics that could allows us to find new astronomical objects not observed in the past.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LGAd: Lightcurve generative model for anomaly detection">
+<meta name="twitter:title" content="LGAd: Lightcurve generative model for anomaly detection">
+<meta property="og:url" content="https://jumpynitro.github.io/blog/2022/07/lgad/">
+<meta property="twitter:url" content="https://jumpynitro.github.io/blog/2022/07/lgad/">
+<meta property="og:site_name" content="">
+<meta property="og:description" content="We present LGAd, a variational autoencoder for anomaly detection in time series. Anomaly detection is fundamental task in astroinformatics that could allows us to find new astronomical objects not observed in the past.">
+<meta name="twitter:description" content="We present LGAd, a variational autoencoder for anomaly detection in time series. Anomaly detection is fundamental task in astroinformatics that could allows us to find new astronomical objects not observed in the past.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2022-07-03T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-07-03T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Generative models">
+    
+      <meta property="article:section" content="Time series">
+    
+      <meta property="article:section" content="Anomaly detection">
+    
+      <meta property="article:section" content="Astroinformatic">
+    
+      <meta property="article:section" content="work in progress">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/img/LGAd/LCVaDE-1.png">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/img/LGAd/LCVaDE-1.png">
+
+
+    <title>LGAd: Lightcurve generative model for anomaly detection</title>
+
+    <link rel="icon" href="https://jumpynitro.github.io/blog/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jumpynitro.github.io/blog/2022/07/lgad/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jumpynitro.github.io/blog/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="2">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jumpynitro.github.io/blog/" aria-label="Go to homepage"></a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jumpynitro.github.io/blog/#about" aria-label="Open the link: /#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="2">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jumpynitro.github.io/blog/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Nicolás Astorga</h4>
+        
+          <h5 class="sidebar-profile-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/" title="Posts">
+    
+      <i class="sidebar-button-icon fas fal fa-shapes" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/about" title="About me">
+    
+      <i class="sidebar-button-icon fas fal fa-user-circle" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/research" title="Research">
+    
+      <i class="sidebar-button-icon fas fal fa-book-open" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Research</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/industry" title="Eng. work">
+    
+      <i class="sidebar-button-icon fas fal fa-laptop" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Eng. work</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/jumpynitro" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/NicolasAstorgaCV.pdf" title="CV">
+    
+      <i class="sidebar-button-icon fas fal fa-user-graduate" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">CV</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="2"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      LGAd: Lightcurve generative model for anomaly detection
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-07-03T00:00:00Z">
+        
+  July 3, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/generative-models">Generative models</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/time-series">Time series</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/anomaly-detection">Anomaly detection</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/astroinformatic">Astroinformatic</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/work-in-progress">work in progress</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <p><strong>LGAd</strong>  a generative model for variable length and irregularly sampled times series. As a variational model the loss function of the model is obtained by maximizing a bound from the  likelihood $\boldsymbol{\mathbb{E}_{q(x)}[\log p(x)]}$. For anomaly detection we used  $\boldsymbol{\hat{\mathcal{I}}(z,y|\cdot)}$, a bound of the mutual information (MI) between the continuous latent variables $\boldsymbol{z}$ and the categorical latent variables $\boldsymbol{y}$. From some input $\boldsymbol{x_i}$ a lower MI bound means the our codification $\boldsymbol{z_i}$ is not that correlated with our categorical variables $\boldsymbol{y}$ (Anomalous, or outlier). On the contrary, a higher MI bound means the our codification $\boldsymbol{z_i}$ is correlated with our categorical variables $\boldsymbol{y}$ (inlier). In the following, we show how it looks the MI bound using astronomical data.</p>
+<p><img src="https://jumpynitro.github.io/blog/img/LGAd/MI_hist_delta-1.png" alt="MI_delta"></p>
+<h3 id="model">Model</h3>
+<p>The graphical model <strong>LGAd</strong> is:</p>
+<ul>
+<li>$p(x,z,y,f|t) = p(x|z,t)p(z|y)p(f|y)p(y)$</li>
+<li>$q(x,z,y,f,t) = q(x,f,t)q(z|x,t)q(y|z,f)$,</li>
+</ul>
+<p>where $\boldsymbol{x \in \mathcal{X}}$ is the observed variable, $\boldsymbol{t \in T}$ are the times associated to the observed variable $\boldsymbol{x}$, $\boldsymbol{z \in \mathcal{Z}}$ latent variable, $\boldsymbol{y \in \mathcal{Y}}$ categorical latent variable and $\boldsymbol{f \in \mathcal{F}}$ is a metadata variable that can helps for classification but is not worthy to compress in a latent variable $\boldsymbol{z}$.</p>
+<p>In practice we found that using labeled data improve the performance so the include a cross-entropy term between the logits and the true labels. The loss function of LGAd can be summarized as follow:</p>
+<p>$$
+\mathcal{L}^{\text{LGAd-supervised}} = \mathcal{L}^{\text{LGAd-unsupervised}} + h(y, \tilde{y}),
+$$</p>
+<p>where $h(y, \tilde{y})$ is a common cross-entropy of a classifier and the true labels, and $\mathcal{L}^{\text{LGAd-unsupervised}}$ is the unsupervised part of the model, obtained using VAE derivation:</p>
+<p>$$
+\mathbb{E}_{q(x,t)}[\log p(x|t)] \geq \mathbb{E}_{q(x,z,y,f,t)} \left[\log \frac{p(x,z,y,f|t)}{q(x,z,y,f,t)} \right]
+$$</p>
+<p>$$
+\equiv \mathbb{E}_{q(x,t)q(z|x,t)}[[\log p(x|z,t)] + \mathbb{E}_{q(y|z,f)}[\log p(z|y)]
+$$
+$$
+~ + \mathbb{E}_{q(f)q(y|z,f)}[\log p(f|y)]] + \mathbb{E}_{q(y)}[\log p(y)]
+$$
+$$
+~ + h(y|z) + h(z|x) \equiv -\mathcal{L}^{\text{LGAd-unsupervised}},
+$$</p>
+<p>where $\mathbb{E}_{q(x,t)q(z|x,t)}[[\log p(x|z,t)]$ is the likelihood of the decoder (reconstruction error), $\mathbb{E}_{q(y|z,f)}[\log p(z|y)]$, $\mathbb{E}_{q(f)q(y|z,f)}[\log p(f|y)]]$,  $\mathbb{E}_{q(y)}[\log p(y)]$ are likelihoods of the encoded latent variables over the priors of the generative model. Finally the last terms are entropy terms that are maximized in order to reach non trivial solutions. A diagram of the all training procedure is shown as follows:</p>
+<p><img src="https://jumpynitro.github.io/blog/img/LGAd/LCVaDE-1.png" alt="MI_gen"></p>
+<p>For anomaly detection we proposed a new anomaly score called IAS. IAS consists in measuring the correlation between the latent variables $\boldsymbol{z}$ and $\boldsymbol{y}$ using a estimate of true mutal information $\boldsymbol{\mathcal{I}}(z,y|\cdot)$. This mutual information is approximated as follows:
+$$
+\mathcal{I}(z,y|x,f) = \mathbb{E}_{q(z,y|x,f)}[\log p(z|y)] + h(z|x)  + \mathbb{E}_{q(y)}[D_{KL}(q(z|y) || p(z|y) )]
+$$
+$$
+\geq \mathbb{E}_{q(z,y|x,f)}[\log p(z|y)] + h(z|x) \equiv \text{IAS}(x),~~~~~~~
+$$</p>
+<p>More results are in my thesis, but we are working to publish a paper with this models and anomaly score.</p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/agp/" data-tooltip="AGP: Amortized Gaussian Process" aria-label="NEXT: AGP: Amortized Gaussian Process">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jumpynitro.github.io\/blog\/2022\/07\/lgad\/';
+        
+          this.page.identifier = '\/2022\/07\/lgad\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'hugo-tranquilpeak-theme';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2022 Nicolás Astorga. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/agp/" data-tooltip="AGP: Amortized Gaussian Process" aria-label="NEXT: AGP: Amortized Gaussian Process">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="2">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Flgad%2F" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Flgad%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Flgad%2F" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span>Share on Linkedin</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Nicolás Astorga</h4>
+    
+      <div id="about-card-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Research Scientist / ML Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        Chile
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jumpynitro.github.io/blog/my_images/universe.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jumpynitro.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: { linebreaks: { automatic: true } },
+      tex2jax: { inlineMath: [ ['$', '$'], ['\\(','\\)'] ], displayMath: [ ['$$','$$'], ['\\[', '\\]'] ], processEscapes: false },
+      messageStyle: 'none'
+    });
+  </script>
+
+
+
+    
+  </body>
+</html>
+

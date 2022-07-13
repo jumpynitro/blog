@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Generative-inference models: Theory and empirical analysis (Part I)",
+  
+  "image": "https://jumpynitro.github.io/blog/my_images/img/GIM1/advjoint.png",
+  
+  "datePublished": "2022-07-05T00:00:00Z",
+  "dateModified": "2022-07-05T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "Nicolás Astorga",
+    
+    "image": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jumpynitro.github.io\/blog\/2022\/07\/gim1\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    }
+    
+  },
+  "description": "Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="Nicolás Astorga">
+<meta name="keywords" content="">
+<meta name="description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+
+
+<meta property="og:description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Generative-inference models: Theory and empirical analysis (Part I)">
+<meta name="twitter:title" content="Generative-inference models: Theory and empirical analysis (Part I)">
+<meta property="og:url" content="https://jumpynitro.github.io/blog/2022/07/gim1/">
+<meta property="twitter:url" content="https://jumpynitro.github.io/blog/2022/07/gim1/">
+<meta property="og:site_name" content="">
+<meta property="og:description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+<meta name="twitter:description" content="Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2022-07-05T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-07-05T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Generative models">
+    
+      <meta property="article:section" content="representation learning">
+    
+      <meta property="article:section" content="GANs">
+    
+      <meta property="article:section" content="VAEs">
+    
+      <meta property="article:section" content="work in progress">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/img/GIM1/advjoint.png">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/img/GIM1/advjoint.png">
+
+
+    <title>Generative-inference models: Theory and empirical analysis (Part I)</title>
+
+    <link rel="icon" href="https://jumpynitro.github.io/blog/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jumpynitro.github.io/blog/2022/07/gim1/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jumpynitro.github.io/blog/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="2">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jumpynitro.github.io/blog/" aria-label="Go to homepage"></a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jumpynitro.github.io/blog/#about" aria-label="Open the link: /#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="2">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jumpynitro.github.io/blog/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Nicolás Astorga</h4>
+        
+          <h5 class="sidebar-profile-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/" title="Posts">
+    
+      <i class="sidebar-button-icon fas fal fa-shapes" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/about" title="About me">
+    
+      <i class="sidebar-button-icon fas fal fa-user-circle" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/research" title="Research">
+    
+      <i class="sidebar-button-icon fas fal fa-book-open" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Research</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/industry" title="Eng. work">
+    
+      <i class="sidebar-button-icon fas fal fa-laptop" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Eng. work</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/jumpynitro" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/NicolasAstorgaCV.pdf" title="CV">
+    
+      <i class="sidebar-button-icon fas fal fa-user-graduate" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">CV</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="2"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      Generative-inference models: Theory and empirical analysis (Part I)
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-07-05T00:00:00Z">
+        
+  July 5, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/generative-models">Generative models</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/representation-learning">representation learning</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/gans">GANs</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/vaes">VAEs</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/work-in-progress">work in progress</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <p>The work presented in this vlog is still in progress and summarizes my thesis&rsquo;s chapters 3 and 4.</p>
+<h3 id="foundation-of-generative-inference-models">Foundation of generative-inference models</h3>
+<p>We will refer as generative-inference models to every model that considers a generative model $\boldsymbol{p}$ and an inference model $\boldsymbol{q}$. For these models, in general we will consider two variables: $\boldsymbol{x \in \mathcal{X}}$ and $\boldsymbol{z \in \mathcal{Z}}$, $\boldsymbol{\mathcal{X}}$ being the observable space and $\boldsymbol{\mathcal{Z}}$ being a latent low-dimensional manifold space. When two variables are considered the joint distributions are $\boldsymbol{p(x,z)}$ and $\boldsymbol{q(x,z)}$. The generative model $\boldsymbol{p(x,z)=p(x|z)p(z)}$ is decomposed in a prior distribution $\boldsymbol{p(z)}$ and a decoder $\boldsymbol{p(x|z)}$ usually modeled as a neural network (NN).</p>
+<p>In the following a diagram of the generative and inference models.</p>
+<p><img src="https://jumpynitro.github.io/blog/img/GIM1/GIM_ex1.png" alt="GIM_ex1">
+In the left hand size the generative model in green. In the right hand side, the inference in blue.</p>
+<p>As the generative-inference models have a generative model and an inference model we can expect them to have representation learning capablities as well as generative capabitilies. The following properties summarized the contruction of generative-inference models.</p>
+<ul>
+<li><strong>Desired property 1</strong>. <em>The marginal distributions of generative-inference models should match i.e. $q(z), p(z)$ should be equal and $p(x), q(x)$ should be equal.</em></li>
+<li><strong>Desired property 2</strong>. <em>Data  $x_i \in \mathcal{X}$ sampled from the empirical data distribution $q_{\delta}(x)$ should have a high correlation with its codified version $z(x_i) \in \mathcal{Z}$ in the latent space.</em></li>
+</ul>
+<p><strong>Desired property 1</strong> is a restriction given by the graphical models $p$ and $q$. The inferred marginal distribution $q(z)$ should follow the prior distribution $p(z)$, which can help for representation learning. For example, in MPCC $\boldsymbol{p(z) = \sum_y^K p(z|y)p(y)}$ allowing clustering capablities. Additional the generated marginal distribution $p(x)$ should follow the real distribution $q(x)$ <em>i.e</em> the model generates realistic data.</p>
+<p><strong>Desired property 2</strong> tells us about the representation learning capabilities of the model. If the codified version $z(x_i)$ of the data $x_i \sim q_{\delta}(x)$ is well represented in the latent space this would mean that a simpler classifier can be trained in the lower dimensional space $\mathcal{Z}$. We study the mutual information perspective by bounding it with likelihoods $\mathbb{E}_{q(x)}[\log p(x|z)]$ or $\mathbb{E}_{p(z)}[\log q(z|x)]$, which is related with generative models as we will see in this post. This approach is different from previous work.</p>
+<h3 id="how-to-obtain-desired-properties-1-and-2">How to obtain desired properties 1 and 2.</h3>
+<p>Desired properties 1 and 2 can be achieved by matching the joint distributions $\boldsymbol{p(x,z)}$ and $\boldsymbol{q(x,z)}$. If the joint distributions are equal then:</p>
+<ul>
+<li>The marginal distributions $p(x)$, $q(x)$ and $q(z)$, $p(z)$ are equal too (<strong>desired property 1</strong>). This is easy to observe by integrating one variable <em>i.e.</em> $\int_z p(x,z) dz = \int_z q(x,z) dz \equiv p(x) = q(x)$ and $\int_x p(x,z) dx = \int_x q(x,z) dx \equiv p(z) = q(z)$.</li>
+<li>The conditionals distributions are also equivalent as we can observe mathematically $q(x,z)/q(z) = p(x,z)/p(z) \equiv q(x|z) = p(x|z)$ and $q(x,z)/q(x) = p(x,z)/p(x) \equiv q(z|x) = p(z|x)$. If this occurs using deterministic conditional distributions we would obtain perfect reconstructions as shown here (<strong>desired property 2</strong>).</li>
+</ul>
+<p>The literature shows two different ways of matching the joint distributions. The first way is by matching the joint distributions adversarially as shown here, here or here. The second way is based on decomposing the matching of the joint distributions in simpler terms using KL divergence.</p>
+<h4 id="matching-qxz-and-pxz-adversarially">Matching $q(x,z)$ and $p(x,z)$ adversarially</h4>
+<p>The originally the objective of GANs is to match the marginal distribution $q(x)$ and $p(x)$ but it can be extended to match the joint distribution $q(x,z)$ and $p(x,z)$ as original done from these guys and these guys. The training is quite similar and have same theoretical guaranties. A diagram of this type of training can be observed as follows.</p>
+<p><img src="https://jumpynitro.github.io/blog/img/GIM1/advjoint.png" alt="adv_joints"></p>
+<h4 id="minimizing-d_klqxzpxz-by-decomposing-it">Minimizing $D_{KL}(q(x,z)||p(x,z))$ by decomposing it</h4>
+<p>We start by decomposing the KL divergence of the joints $q(x,z)$ and $p(x,z)$ as follows:</p>
+<p>$$
+D_{KL}(q(x,z) ||p(x,z)) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$$
+$$
+~ = ~ \mathbb{E}_{q(x)} \mathbb{E}_{q(z|x)}[  -  \log p(x|z)    ] - h_q(x)  +  \mathbb{E}_{q(x)} [D_{KL}(q(z|x)|| p(z)) ]~~~~~~~~~ (1)~
+$$
+$$
+~ = ~ \mathbb{E}_{q(x)}\mathbb{E}_{q(z|x)}[  -  \log p(x|z)    ] - h_q(x) + \mathcal{I}_q(x,z) + D_{KL}(q(z)|| p(z) )~~~~~(2),
+$$</p>
+<p>This divergence can be decomposed as in Eq. (1) or Eq. (2). Eq. (1) is optimized by Variational Autoencoders (VAEs) with the exception of the entropy term $h_q(x)$. $\beta$-VAE and Adversarial Variational Bayes (AVB) also follow (1) modifying the optimization of $D_{KL}(q(z|x)||p(z))$, in particular $\beta$-VAE adds a constant to the KL-divergence term and AVB replaces it with adversarial training.</p>
+<p>Other methods can be associated with (2) by replacing $D_{KL}(q(z)||p(z))$ with similar objectives. Info-VAE, Adversarial Autoencoders (AAEs), Wasserstein Autoencoders (WAEs) have followed this approach using adversarial training or maximum mean discrepancy between the marginal distributions. These models don&rsquo;t explicitly optimize $\mathcal{I}_q(x,z)$ and thus the entropy term $h_q(z|x)$, which is included in $\mathcal{I}_q(x,z)$.</p>
+<p>In the following a diagram that encapsulates the concept in equation (1):
+<img src="https://jumpynitro.github.io/blog/img/GIM1/DecJointsiKL.png" alt="JointInf"></p>
+<h4 id="minimizing-d_klpxzqxz-by-decomposing-it">Minimizing $D_{KL}(p(x,z)||q(x,z))$ by decomposing it</h4>
+<p>We start by decomposing the KL divergence of the joints $p(x,z)$ and $q(x,z)$ as</p>
+<p>$$
+D_{KL}(p(x,z) ||q(x,z)) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$$
+$$
+~ = ~ \mathbb{E}_{p(z)} \mathbb{E}_{p(x|z)}[  -  \log q(z|x)    ] - h_p(z)  +  \mathbb{E}_{p(z)} [D_{KL}(p(x|z)|| q(x)) ]~~~~~~~~~ (3)~
+$$
+$$
+~ = ~ \mathbb{E}_{p(z)}\mathbb{E}_{p(x|z)}[  -  \log q(z|x)    ] - h_p(z) + \mathcal{I}_p(x,z) + D_{KL}(p(x)|| q(x) )~~~~~(4),
+$$</p>
+<p>The divergence $D_{KL}(p(x,z)||q(x,z))$ can be decomposed either as Eq. (3) or Eq. (4). Note that it is not possible to minimize  $\mathbb{E}_{p(z)} [D_{KL}(p(x|z)|| q(x)) ]$, the third term of Eq. (3), using a closed form solution since we don&rsquo;t have access to the $q(x)$ distribution. This could be optimized using adversarial training like AVB, but to the best of our knowledge this hasn&rsquo;t been explored in the literature. However in practice Eq. (4) has been optimized in AIM or Info-GAN (if $c = z$).</p>
+<h4 id="some-final-thoughts">Some final thoughts</h4>
+<p>In this vlog we showed how the loss function of current generative-inference models can be obtained by using a joint distribution matching perspective. However, it doesn&rsquo;t tell us anything about representation learning capabilities of the model. In the next vlog we will expand more on this idea.</p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/gim2/" data-tooltip="Generative-inference models: Theory and empirical analysis (Part II)" aria-label="NEXT: Generative-inference models: Theory and empirical analysis (Part II)">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/agp/" data-tooltip="AGP: Amortized Gaussian Process" aria-label="PREVIOUS: AGP: Amortized Gaussian Process">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jumpynitro.github.io\/blog\/2022\/07\/gim1\/';
+        
+          this.page.identifier = '\/2022\/07\/gim1\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'hugo-tranquilpeak-theme';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2022 Nicolás Astorga. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/gim2/" data-tooltip="Generative-inference models: Theory and empirical analysis (Part II)" aria-label="NEXT: Generative-inference models: Theory and empirical analysis (Part II)">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/agp/" data-tooltip="AGP: Amortized Gaussian Process" aria-label="PREVIOUS: AGP: Amortized Gaussian Process">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="2">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fgim1%2F" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fgim1%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fgim1%2F" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span>Share on Linkedin</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Nicolás Astorga</h4>
+    
+      <div id="about-card-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Research Scientist / ML Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        Chile
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jumpynitro.github.io/blog/my_images/universe.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jumpynitro.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: { linebreaks: { automatic: true } },
+      tex2jax: { inlineMath: [ ['$', '$'], ['\\(','\\)'] ], displayMath: [ ['$$','$$'], ['\\[', '\\]'] ], processEscapes: false },
+      messageStyle: 'none'
+    });
+  </script>
+
+
+
+    
+  </body>
+</html>
+

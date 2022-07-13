@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Generative models on </title>
+    <link>https://jumpynitro.github.io/blog/categories/generative-models/</link>
+    <description>Recent content in Generative models on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 07 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jumpynitro.github.io/blog/categories/generative-models/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MPCC: Matching priors and conditional for clustering</title>
+      <link>https://jumpynitro.github.io/blog/2022/07/mpcc/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/2022/07/mpcc/</guid>
+      <description>Generative adversarial model for clustering. This model is derived from a KL Divergence perspective between inference and generative distributions.</description>
+    </item>
+    
+    <item>
+      <title>Generative-inference models: Theory and empirical analysis (Part II)</title>
+      <link>https://jumpynitro.github.io/blog/2022/07/gim2/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/2022/07/gim2/</guid>
+      <description>Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.</description>
+    </item>
+    
+    <item>
+      <title>Generative-inference models: Theory and empirical analysis (Part I)</title>
+      <link>https://jumpynitro.github.io/blog/2022/07/gim1/</link>
+      <pubDate>Tue, 05 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/2022/07/gim1/</guid>
+      <description>Many Generative models have an infertence counter part. In this work we explore how they are formulated. We also studied their representation learning and generative capabilities theoretically and empirically.</description>
+    </item>
+    
+    <item>
+      <title>AGP: Amortized Gaussian Process</title>
+      <link>https://jumpynitro.github.io/blog/2022/07/agp/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/2022/07/agp/</guid>
+      <description>Amortized Gaussian Process is a model that amortizes the computation of a Gaussian Process. With this model we can use autoencoder for time series with variable length and irregular sampling.</description>
+    </item>
+    
+    <item>
+      <title>LGAd: Lightcurve generative model for anomaly detection</title>
+      <link>https://jumpynitro.github.io/blog/2022/07/lgad/</link>
+      <pubDate>Sun, 03 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/2022/07/lgad/</guid>
+      <description>We present LGAd, a variational autoencoder for anomaly detection in time series. Anomaly detection is fundamental task in astroinformatics that could allows us to find new astronomical objects not observed in the past.</description>
+    </item>
+    
+  </channel>
+</rss>

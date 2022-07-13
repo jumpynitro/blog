@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Astroinformatic on </title>
+    <link>https://jumpynitro.github.io/blog/categories/astroinformatic/</link>
+    <description>Recent content in Astroinformatic on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 03 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jumpynitro.github.io/blog/categories/astroinformatic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LGAd: Lightcurve generative model for anomaly detection</title>
+      <link>https://jumpynitro.github.io/blog/2022/07/lgad/</link>
+      <pubDate>Sun, 03 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/2022/07/lgad/</guid>
+      <description>We present LGAd, a variational autoencoder for anomaly detection in time series. Anomaly detection is fundamental task in astroinformatics that could allows us to find new astronomical objects not observed in the past.</description>
+    </item>
+    
+  </channel>
+</rss>

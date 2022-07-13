@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MPCC: Matching priors and conditional for clustering",
+  
+  "image": "https://jumpynitro.github.io/blog/my_images/img/samples_cifar.png",
+  
+  "datePublished": "2022-07-07T00:00:00Z",
+  "dateModified": "2022-07-07T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "Nicolás Astorga",
+    
+    "image": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jumpynitro.github.io\/blog\/2022\/07\/mpcc\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jumpynitro.github.io/blog/my_images/nicolas.jpg"
+    }
+    
+  },
+  "description": "Generative adversarial model for clustering. This model is derived from a KL Divergence perspective between inference and generative distributions.",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="Nicolás Astorga">
+<meta name="keywords" content="">
+<meta name="description" content="Generative adversarial model for clustering. This model is derived from a KL Divergence perspective between inference and generative distributions.">
+
+
+<meta property="og:description" content="Generative adversarial model for clustering. This model is derived from a KL Divergence perspective between inference and generative distributions.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MPCC: Matching priors and conditional for clustering">
+<meta name="twitter:title" content="MPCC: Matching priors and conditional for clustering">
+<meta property="og:url" content="https://jumpynitro.github.io/blog/2022/07/mpcc/">
+<meta property="twitter:url" content="https://jumpynitro.github.io/blog/2022/07/mpcc/">
+<meta property="og:site_name" content="">
+<meta property="og:description" content="Generative adversarial model for clustering. This model is derived from a KL Divergence perspective between inference and generative distributions.">
+<meta name="twitter:description" content="Generative adversarial model for clustering. This model is derived from a KL Divergence perspective between inference and generative distributions.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2022-07-07T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-07-07T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Generative models">
+    
+      <meta property="article:section" content="clustering">
+    
+      <meta property="article:section" content="GANs">
+    
+      <meta property="article:section" content="VAEs">
+    
+      <meta property="article:section" content="ECCV2020">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/nicolas.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jumpynitro.github.io/blog/my_images/img/samples_cifar.png">
+  <meta property="twitter:image" content="https://jumpynitro.github.io/blog/my_images/img/samples_cifar.png">
+
+
+    <title>MPCC: Matching priors and conditional for clustering</title>
+
+    <link rel="icon" href="https://jumpynitro.github.io/blog/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jumpynitro.github.io/blog/2022/07/mpcc/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jumpynitro.github.io/blog/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="2">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jumpynitro.github.io/blog/" aria-label="Go to homepage"></a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jumpynitro.github.io/blog/#about" aria-label="Open the link: /#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="2">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jumpynitro.github.io/blog/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Nicolás Astorga</h4>
+        
+          <h5 class="sidebar-profile-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/" title="Posts">
+    
+      <i class="sidebar-button-icon fas fal fa-shapes" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/about" title="About me">
+    
+      <i class="sidebar-button-icon fas fal fa-user-circle" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/research" title="Research">
+    
+      <i class="sidebar-button-icon fas fal fa-book-open" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Research</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/industry" title="Eng. work">
+    
+      <i class="sidebar-button-icon fas fal fa-laptop" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Eng. work</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/jumpynitro" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/NicolasAstorgaCV.pdf" title="CV">
+    
+      <i class="sidebar-button-icon fas fal fa-user-graduate" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">CV</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="2"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      MPCC: Matching priors and conditional for clustering
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-07-07T00:00:00Z">
+        
+  July 7, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/generative-models">Generative models</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/clustering">clustering</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/gans">GANs</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/vaes">VAEs</a>, 
+    
+      <a class="category-link" href="https://jumpynitro.github.io/blog/categories/eccv2020">ECCV2020</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <p><strong>Clustering</strong> is a fundamental task in unsupervised learning that depends heavily on the data representation that is used. Deep generative models have appeared as a promising tool to learn informative low-dimensional data representations. In this blog we will dismitify MPCC, a generative model for clustering that <strong>we published on ECCV2020</strong>.</p>
+<p><strong>Matching Priors and Conditionals for Clustering (MPCC)</strong> is a GAN-based model with an encoder to infer latent variables and cluster categories from data, and a flexible decoder to generate samples from a conditional latent space. MPCC is obtained through mathematical derivation and allows us to generate samples from different clusters in an unsupervised manner:</p>
+<p><img src="https://jumpynitro.github.io/blog/img/samples_cifar.png" alt="samples_cifar">
+(Every two columns a different cluster)</p>
+<h3 id="background">Background</h3>
+<p>The idea of MPCC comes from a matching joint distribution optimization framework. To understand the intuition of what does it that means, let denote some notation:</p>
+<ul>
+<li>Let $\boldsymbol{q(x)}$ be the true data distribution, where $x \in \mathcal{X}$ the observed variable.</li>
+<li>Let $\boldsymbol{p(z)}$ the prior of the latent distribution, where $z \in \mathcal{Z}$ the latent variable.</li>
+</ul>
+<p>Let also define $\boldsymbol{q(x)}$  and $\boldsymbol{p(z)}$ as the marginalization of the inference model $\boldsymbol{q(x,z)}$  and generative model  $\boldsymbol{p(x, z)}$ respectively. If the joint distributions $\boldsymbol{q(x,z)}$ and $\boldsymbol{p(x, z)}$ match then it is guaranteed that all the conditionals  and marginals also match.</p>
+<p>Intuitively this means that we can reach one domain starting from the other, <em>i.e.</em>:</p>
+<ul>
+<li>
+<p>If $\boldsymbol{p(z) \approx q(z) = \mathbb{E}_{q(x)}[q(z|x)]}$ we have an encoder, $\boldsymbol{q(z|x)}$, that allows us to reach the latent variables. In other words, $\boldsymbol{q(z)}$, the distribution obtained from all encoded observed data $\boldsymbol{x \in \mathcal{X}}$ should follow the prior $\boldsymbol{p(z)}$ that we established.</p>
+</li>
+<li>
+<p>If $\boldsymbol{q(x) \approx p(x) = \mathbb{E}_{p(z)}[p(x|z)]}$ we have a decoder, $\boldsymbol{p(x|z)}$, that allows us to generate realistic data. In other words, $\boldsymbol{p(x)}$, the distribution obtained from all the decoded samples from the prior should follow the true data distribution $\boldsymbol{q(x)}$ that we established.</p>
+</li>
+</ul>
+<p>Previous works have also noted that VAE&rsquo;s loss function can be obtained by expanding $\boldsymbol{D_{KL}(q(x,z)||p(x,z))}$. In this current work we analize more in depth what models can be obtained through this perspective. In MPCC, it is shown that VaDE can be obtained minimizing $\boldsymbol{D_{KL}(q(x,z)||p(x,z))}$, and in AIM models they showed a model obtained by minimizing $\boldsymbol{D_{KL}(p(x,z)||q(x,z))}$. MPCC borns from the motivation of minimizing $\boldsymbol{D_{KL}(p(x,z,y)||q(x,z,y))}$.</p>
+<p>Before we continue, it is important to have an intuition of the advantages of three variable models ($\boldsymbol{x,z,y}$) over two variable models ($\boldsymbol{x,z}$). In three variable models we are assuming the existence of a third latent variable $\boldsymbol{y}$ and a corresponding prior $\boldsymbol{p(y)}$. Since  $\boldsymbol{y}$ is categorical, we are forcing the existence of an inference model $\boldsymbol{q(y|z)}$, which is obtained by deriving some KL divergence. In other words, we have an inference model that infers categories by encoding observed data $\boldsymbol{x \sim q(x)}$, and a generative model that generate realistic data by sampling from a categorical distribution  $\boldsymbol{y \sim p(y)}$.</p>
+<h3 id="matching-priors-and-conditional-for-clustering">Matching priors and conditional for clustering</h3>
+<p>To derive MPCC, first we need to establish how the inference model  $\boldsymbol{q(x,z,y)}$ and the generative models  $\boldsymbol{p(x,z,y)}$ will be decomposed (the independence assumptions are explained in the paper).</p>
+<ul>
+<li>$\boldsymbol{q(x,z,y) = q(x)q(z|x)q(y|z)}$</li>
+<li>$\boldsymbol{p(x,z,y) = p(x|z,y)p(z|y)p(y)}$</li>
+</ul>
+<p>In the paper we derived the following equality:</p>
+<p>$$
+\boldsymbol{\mathbb{E}_{p(x,z,y)}[D_{KL}(p(x,z,y)||q(x,z,y))}] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$$
+$$
+= \underbrace{\mathbb{E}_{p(y)p(z|y)} [D_{KL}(p(x|z,y)||q(x))]}_{\textbf {Loss I} } + \underbrace{\mathbb{E}_{p(y)p(z|y)p(x|z,y)} [- \log q(z|x) - \log q(y|z)  ]}_{\textbf{Loss II} } $$
+$$
++~ \underbrace{\mathbb{E}_{p(z|y)p(y)}[\log p(y)+ \log p(z|y)]}_{\textbf{Loss III}} ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$$</p>
+<p>The loss function of the right hand side can be minimized with closed form solution for the majority of their terms when assuming Gaussian distribution for $\boldsymbol{p(z|y)}$. Note that $\boldsymbol{p(z|y = c)}$ is basically a Gaussian for each cluster/categoy $\boldsymbol{c}$. And although they look quite criptic we can interpret them quite easily:</p>
+<ul>
+<li><strong>Loss I</strong>: In the paper, we minimize $\boldsymbol{D_{KL}(p(x)||q(x))}$ adversarially instead of $\boldsymbol{D_{KL}(p(x|z,y)||q(x))}$. You probably think that minimize the first term instead fo the second is cheating but in this work we explore the differences between both measures. With this optimization we learn a decoder that aproximate the real distribution of the data.</li>
+<li><strong>Loss II</strong>: Maximizing the likelihood $\boldsymbol{q(z|x = \tilde{x}_i)}$ is equivalent to train an encoder ($\boldsymbol{q(z|x)}$) that identifies the sample $\boldsymbol{z_i \sim p(z)}$ that generated  $\boldsymbol{\tilde{x}_i}$.  Maximizing the likelihood $\boldsymbol{q(y|z = z_i)}$ is equivalent to train a classifier ($\boldsymbol{q(y|z = z_i)}$) that identifies the sample $\boldsymbol{y_i \sim p(y)}$  that generates $\boldsymbol{z_i \sim p(z|y=y_i)}$. This last optimization separates each conditional distribution  $\boldsymbol{p(z|y=c_k)}$ from the other, helping the clustering capabilities of the model.</li>
+<li><strong>Loss III</strong>: These loss functions are basically entropies that help that latent varibles don&rsquo;t collapse in local optimas.</li>
+</ul>
+<p>Assumming Gaussian distribution for each each conditinal distribution  $\boldsymbol{p(z|y=c) = \mathcal{N}(\mu_{c}, \sigma^2_{c}) }$, MPCC&rsquo;s functioning can be observed as follows:</p>
+<p><img src="https://jumpynitro.github.io/blog/img/MPCC-diagram5-big3.png" alt="MPCC_diag2">
+Fig 1: MPCC diagram components.</p>
+<p>MPCC can also work as we shown in the paper:</p>
+<p><img src="https://jumpynitro.github.io/blog/img/Add_samples_C20.jpg" alt="MPCC_diag3">
+(Every row a different cluster)</p>
+<p><img src="https://jumpynitro.github.io/blog/img/Add_samplesOmni.jpg" alt="MPCC_diag4">
+(Every row a different cluster)</p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/gim2/" data-tooltip="Generative-inference models: Theory and empirical analysis (Part II)" aria-label="PREVIOUS: Generative-inference models: Theory and empirical analysis (Part II)">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jumpynitro.github.io\/blog\/2022\/07\/mpcc\/';
+        
+          this.page.identifier = '\/2022\/07\/mpcc\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'hugo-tranquilpeak-theme';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2022 Nicolás Astorga. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jumpynitro.github.io/blog/2022/07/gim2/" data-tooltip="Generative-inference models: Theory and empirical analysis (Part II)" aria-label="PREVIOUS: Generative-inference models: Theory and empirical analysis (Part II)">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="2">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fmpcc%2F" aria-label="Share on Facebook">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fmpcc%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjumpynitro.github.io%2Fblog%2F2022%2F07%2Fmpcc%2F" aria-label="Share on Linkedin">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span>Share on Linkedin</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jumpynitro.github.io/blog/my_images/nicolas.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Nicolás Astorga</h4>
+    
+      <div id="about-card-bio">I am an ML researcher that is passionate, really passionate, about machine learning. I want to develop models capable of extracting the most information from the available data sources, and at the same time, can generalize to multiple tasks or target data distribution..</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Research Scientist / ML Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        Chile
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jumpynitro.github.io/blog/my_images/universe.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jumpynitro.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      CommonHTML: { linebreaks: { automatic: true } },
+      tex2jax: { inlineMath: [ ['$', '$'], ['\\(','\\)'] ], displayMath: [ ['$$','$$'], ['\\[', '\\]'] ], processEscapes: false },
+      messageStyle: 'none'
+    });
+  </script>
+
+
+
+    
+  </body>
+</html>
+
