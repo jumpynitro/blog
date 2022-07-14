@@ -238,6 +238,16 @@ if (!doNotTrack) {
     </a>
   </li>
 
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/MSThesisEE.pdf" title="MS Thesis EE">
+    
+      <i class="sidebar-button-icon fas fal fa-book-reader" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">MS Thesis EE</span>
+    </a>
+  </li>
+
 
     </ul>
     <ul class="sidebar-buttons">
@@ -294,13 +304,13 @@ if (!doNotTrack) {
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <p>The work presented in this vlog is still in progress and summarizes my thesis&rsquo;s chapters 5 and 6.</p>
+              <p>The work presented in this blog is still in progress and summarizes my <a href="https://jumpynitro.github.io/blog/MSThesisEE.pdf">thesis&rsquo;s</a> chapters 5 and 6.</p>
 <h3 id="background">Background</h3>
-<p>In this vlog we present a general formulation for generative-inference models from the perspective of  representation learning. This formulation is obtained using the information theoretic concept of mutual information (MI). Shannon&rsquo;s MI between the observable variables $x \in \mathcal{X}$ and latent variables $z \in \mathcal{Z}$ is defined as</p>
+<p>In this blog we present a general formulation for generative-inference models from the perspective of  representation learning. This formulation is obtained using the information theoretic concept of mutual information (MI). Shannon&rsquo;s MI between the observable variables $x \in \mathcal{X}$ and latent variables $z \in \mathcal{Z}$ is defined as</p>
 <p>$$\mathcal{I}_r(x,z) = \int_\mathcal{X} \int_\mathcal{Z} r(x,z) \log \frac{r(x,z)}{r(x)r(z)} ,dx ,dz $$</p>
 <p>where $r(x,z)$ is the joint distribution of $x$ and $z$. The definition of MI depends on the choice of the joint distribution. In this case we have two definitions of MI, one for the joint distribution of the inference model $q(x,z)$ and one for the generative model $p(x,z)$. In what follows we will use the sub-indexes $q$ and $p$.</p>
 <h3 id="representation-learning-in-generative-inference-models">Representation learning in generative-inference models</h3>
-<p>To associate current generive-inference model with their representation learning capabilities.</p>
+<p>To associate current generative-inference models with their representation learning capabilities we associate them with the MI of their model distributions.</p>
 <p>We start by writting the MI of the inference model $q(x,z) = q(x|z)q(z)$ as follows</p>
 <p>$$
 \mathcal{I}_q(x,z) ~=~  -\mathcal{L}_q^{\text{model}} + \Delta \mathcal{I}_q^{\text{model}} ~~~~~~~~~~(1)
@@ -314,7 +324,7 @@ $$</p>
 \Delta \mathcal{I}_q^{\text{model}} = \boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)}} + h_q(x) + \mathbb{E}_{q(z)}[D_{KL}(q(x|z) || p(x|z) )]. ~~~~~~~~~~(3)
 $$</p>
 <p>The terms collected in $\mathcal{L}_q^{\text{model}}$ correspond to the loss function&rsquo;s components of the generative-inference model. The loss function is composed by the likelihood and the term $\mathcal{R}_q^{\text{model}}$ which represents a set of restrictions (regularization) for the distributions of the model. This restriction vary depending on the model and is also part of the MI gap $\Delta \mathcal{I}_q^{\text{model}}$. Later we will recognize this restriction term in generative-inference models from the literature to show that their loss functions comply with this formulation.</p>
-<p>The decomposition for the generative model distribution is symetrical. The term $\boldsymbol{{\mathcal{R}_r^{\text{model}} (x,z)}} \geq 0$ is a restriction over the distributions of the model and is included in both $\mathcal{L}_r^{\text{model}}$ and $\Delta \mathcal{I}_r^{\text{model}}$. When  $\mathcal{L}_r^{\text{model}}$ is minimized the restriction is also minimized. A small value for the restriction is desirable as it reduces the gap. I want to the gap to be low since helps the model to be closer to $\boldsymbol{\mathcal{I}_q(x,z)}$, which is a measure of correlation between to variables.</p>
+<p>The decomposition for the generative model distribution is symetrical. The term $\boldsymbol{{\mathcal{R}_r^{\text{model}} (x,z)}} \geq 0$ is a restriction over the distributions of the model and is included in both $\mathcal{L}_r^{\text{model}}$ and $\Delta \mathcal{I}_r^{\text{model}}$. When  $\mathcal{L}_r^{\text{model}}$ is minimized the restriction is also minimized. A small value for the restriction is desirable as it reduces the gap. We want the gap to be low since helps the model to be closer to $\boldsymbol{\mathcal{I}_q(x,z)}$, which is a measure of correlation between to variables.</p>
 <p>In conclusion, from a theoretical point of view we need two things:</p>
 <ul>
 <li>A high mutual information $\boldsymbol{\mathcal{I}_q(x,z) }$, because the mutual information represent a measure of correlation.</li>
@@ -323,30 +333,32 @@ $$</p>
 <p>In the following we show a diagram of the decomposition of the mutual information of the inference model.</p>
 <p><img src="https://jumpynitro.github.io/blog/img/GIM2/MIinf.png" alt="inference_model"></p>
 <h3 id="associating-generative-inference-models-with-mutual-information">Associating generative-inference models with mutual information</h3>
-<p>In the literature $\boldsymbol{{\mathcal{R}_r^{\text{model}} (x,z)}}$ has been utilized to match some of the distributions of the inference model and/or generative model in addition to the decoder likelihood $\mathbb{E}_{q(x,z)}[\log p(x|z)]$ or encoder likelihood $\mathbb{E}_{p(x,z)}[\log q(z|x)]$. The only thing that change between models is the <strong>restriction used</strong>. In the following we showed what generative-inference models fit in this decomposition.</p>
+<p>In the literature $\boldsymbol{{\mathcal{R}_r^{\text{model}} (x,z)}}$ has been utilized to match some of the distributions of the inference model and/or generative model in addition to the decoder likelihood $\mathbb{E}_{q(x,z)}[\log p(x|z)]$ or encoder likelihood $\mathbb{E}_{p(x,z)}[\log q(z|x)]$. The only thing that change between models is the <strong>restriction used</strong>. In the following we showed what generative-inference models fit with this decomposition.</p>
 <p><img src="https://jumpynitro.github.io/blog/img/GIM2/tab_restriction.png" alt="tab_restriction">
-Restrictions of different generative-inference models. The  $\mathcal{D}$ can be replaced for any adversarial training. The variable $x' \in \mathcal{X}'$ refers to data in a high dimensional space.</p>
+Restrictions of different generative-inference models. The  $\mathcal{D}$ can be replaced for any adversarial training. The variable $x' \in \mathcal{X}'$ refers to data in a high dimensional space. We have a lot models!: <a href="https://arxiv.org/abs/1312.6114">VAE</a>, <a href="https://openreview.net/forum?id=Sy2fzU9gl">[$\beta$-VAE]</a>, <a href="https://arxiv.org/abs/1701.04722">AVB</a>, <a href="https://arxiv.org/abs/1511.05644?context=cs">AAE</a>, <a href="https://arxiv.org/abs/1711.01558">WAE</a>, <a href="https://arxiv.org/abs/1706.02262">Info-VAE</a>, <a href="https://arxiv.org/abs/1512.09300?context=cs.CV">VAE-GAN</a>, <a href="https://openreview.net/forum?id=rJx_b3RqY7">AIM</a>, <a href="https://proceedings.neurips.cc/paper/2016/file/7c9d0b1f96aebd7b5eca8c3edaa19ebb-Paper.pdf">Info-GAN</a>, <a href="https://arxiv.org/abs/1705.07761">VEEGAN</a>. <a href="https://arxiv.org/abs/1709.01215">ALICE</a>, <a href="https://arxiv.org/pdf/1703.10593.pdf">CycleGAN</a>.</p>
 <h3 id="what-models-are-better-for-representation-learning">What models are better for representation learning?</h3>
-<p>We have associated generative-inference model with the concept of mutual information. But what loss function of the models are useful for representation learning?.</p>
-<p>To answer this let me write the mutual information in slightly different. In the following, we will analyze representation learning capabilites for models that optimize a bound of the inference model mutual information (the analysis for the MI generative model is symetrical).</p>
+<p>We have associated generative-inference model with the mutual information of the model&rsquo;s distribution. But what loss function of the models are useful for representation learning?.</p>
+<p>To answer this let me write the mutual information in slightly different way. In the following, we will analyze representation learning capabilites for models that optimize a bound of the inference model mutual information (the analysis for the MI generative model is symetrical).</p>
 <p>We can write the mutual information of the inference model as:
 $$
 \mathcal{I}_q(x,z) ~=~  \mathbb{E}_{q(x)}[ D_{KL}(q(z|x)||p(z))] - D_{KL}(q(z)||p(z)),   ~~~~~~~~~~(4)
 $$</p>
 <p>Taking in consideration Eq. (4) we can note that for representation learning minimizing the restricction $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z)||p(z))}$ is better than minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z|x)||p(z))}$.</p>
 <ul>
-<li>Minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z)||p(z))}$ like WAE maximizes the inference model MI by reducing the left hand side in Eq. (4), moreover it minimizes the MI gap in Eq. (3).</li>
-<li>Minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z|x)||p(z))}$ like VAE minimize the inference model MI by reducing the right hand side in Eq. (4). In consequence reducing  MI gap in Eq. (3) will reduce the MI of the inference model.</li>
+<li>Minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z)||p(z))}$ like WAE maximizes the inference model MI by reducing the right hand side in Eq. (4), moreover it minimizes the MI gap in Eq. (3).</li>
+<li>Minimizing  $\boldsymbol{{\mathcal{R}_q^{\text{model}}(x,z)} = D_{KL}(q(z|x)||p(z))}$ like VAE minimize the inference model MI by reducing the left hand side in Eq. (4). In consequence reducing  MI gap in Eq. (3) will reduce the MI of the inference model.</li>
 </ul>
 <p>The analysis is symetrical for models that bound generative model.</p>
 <h3 id="trade-off-between-representation-learning-and-generation">Trade off between representation learning and generation</h3>
-<p>It seems that VAE are worst than WAE models. But we note  that exists a trafe-off between generation and representation which is associated to the prior that we used. We will consider the common prior $p(z)=\mathcal{N}(0, 1)$. We note that <strong>models that compress all the information in the prior have better generative learning capabilities but worst representation learning capabilities ant viceversa</strong>.</p>
+<p>It seems that VAE are worst than WAE models. But we note  that exists a trafe-off between generation and representation which is associated to the prior that we used. We will consider the common prior $p(z)=\mathcal{N}(0, 1)$. We note that <strong>models that compress all the information in the prior have better generative learning capabilities but worst representation learning capabilities, and viceversa</strong>.</p>
 <p>This occurs because if all input information is compressed in the latent space, in some part of the latent space different classes will be close.</p>
-<p>Under this thinking generative models, which have better generative capabilities than VAEs, should have worst representation learning capabilities. VAEs should have better generative capabilities than WAEs since the entropy term $h(z|x)$ helps them to cover information of the input in the prior. A diagram of this thinking in the following:</p>
+<p>Under this thinking, GANs, which have better generative capabilities than VAEs, should have worst representation learning capabilities. VAEs should have better generative capabilities than WAEs since the entropy term $h(z|x)$ helps them to cover information of the input in the prior. A diagram of this thinking in the following:</p>
 <p><img src="https://jumpynitro.github.io/blog/img/GIM2/entropy.png" alt="entropy"></p>
-<p>We observed this behaviour empirically (MNIST), $\tilde{\mathcal{I}}_q(x,z)$ is computed approximating $q(z)$ as Gaussian distribution:
+<p>We observed this behaviour empirically with MNIST (and many more experiments in my <a href="https://jumpynitro.github.io/blog/MSThesisEE.pdf">thesis</a>, which the explanation are also more developed) where we estimated $\tilde{\mathcal{I}}_q(x,z) = h(z) - h(z|x)$ by approximating $q(z)$ as Gaussian distribution:
 <img src="https://jumpynitro.github.io/blog/img/GIM2/LP.png" alt="LP">
 <img src="https://jumpynitro.github.io/blog/img/GIM2/FID.png" alt="FID"></p>
+<p>WVAE and JS-VAE are models that I proposed in my <a href="https://jumpynitro.github.io/blog/MSThesisEE.pdf">thesis</a> (All methodology is also explained here).</p>
+<p>From the plots above we can clearly see that models that perform better at generation (FID score) have worst representation learning capabilities (Linear probing on latent space). Also, better models for representation (Linear probing on latent space) have worst peformance in generation (FID score).</p>
 
               
 

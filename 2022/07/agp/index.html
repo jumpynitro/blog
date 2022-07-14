@@ -238,6 +238,16 @@ if (!doNotTrack) {
     </a>
   </li>
 
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/MSThesisEE.pdf" title="MS Thesis EE">
+    
+      <i class="sidebar-button-icon fas fal fa-book-reader" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">MS Thesis EE</span>
+    </a>
+  </li>
+
 
     </ul>
     <ul class="sidebar-buttons">
@@ -294,13 +304,13 @@ if (!doNotTrack) {
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <p><strong>Amortized Gaussian Process (AGP)</strong>   is a model that amortizes the computation of a <strong>Gaussian Process</strong>. With this model we can use autoencoders for time series with variable length and irregular time sampling. Note that while this model can be quite general we used it mainly for representation learning. Regression is one of our scopes for future research.</p>
+              <p><strong>Amortized Gaussian Process (AGP)</strong>   is a model that amortizes the computation of a <a href="https://distill.pub/2019/visual-exploration-gaussian-processes/"><strong>Gaussian Process</strong></a>. With this model we can use autoencoders for time series with variable length and irregular time sampling. Note that while this model can be quite general we used it mainly for representation learning. Regression is one of our scopes for future research.</p>
 <p><strong>AGP</strong> is a decoder architecture  that use a latent variable $\boldsymbol{z}$ (obtained by encoding some input $\boldsymbol{x}$) and decodes induction points and kernel parameters. With these two elements we can use a posterior distribution to make predictition in the observed space at all time space $\boldsymbol{t \in T}$. In the following image you can see the input data in red, induction points as blue circles and finally the prediction as a blue line.</p>
 <p><img src="https://jumpynitro.github.io/blog/img/AGP/Linear_best_fig-1.png" alt="AGP"></p>
 <h3 id="motivation">Motivation</h3>
-<p><strong>Autoencoder</strong> architectures are promising alternatives to train unsupervised or semi-supervised learning models in astroinfomatic. The amount of unlabeled astronomy data is huge and unsupervised models like autoencoders are promising to explore. However, astronomical data have variable length and irregular time series so both the encoder and the decoder should deal with these difficulties. We proposed the decoder <strong>AGP</strong> for that purpose. In the following we explain the main methodology.</p>
+<p><strong>Autoencoder</strong> architectures are promising alternatives to train unsupervised or semi-supervised learning models in <strong>astroinfomatic</strong>. The amount of unlabeled  data in astronomy is huge and unsupervised models like autoencoders are promising to explore. However, astronomical data are time series that have variable length and irregular sampling, so both the encoder and the decoder should deal with these difficulties. We proposed the decoder <strong>AGP</strong> for that purpose. In the following we explain the main methodology.</p>
 <h3 id="methodology">Methodology</h3>
-<p>This new decoder is motivated by <strong>Gaussian Process</strong> where the observed data $x_i, t_i \sim q(x, t)$ is used to predict points in the observable space at times $t^{\text{pred}}_i$ that do not correspond to the empirical distribution $q(t)$. This prediction is closed form for Gaussian distributions,</p>
+<p>This new decoder is motivated by <strong>Gaussian Process</strong> where the observed data $x_i, t_i \sim q(x, t)$ is used to predict points in the observable space at times $t^{\text{pred}}_i$ that do not correspond to the time distribution $q(t)$. This prediction is closed form for Gaussian distributions,</p>
 <p>$$
 p(A|B) = \mathcal{N}(\mu^{A|B}, \Sigma^{A|B}) \label{GaussianProcess}
 $$
@@ -312,12 +322,12 @@ $$
 $$</p>
 <p>where in Gaussian processes $A$ refer to the predicted data, $B$ refer to the observed data and $\Sigma_{\theta_i}^{A,B}$ is a covariance matrix with dimension $|A|\times |B|$, constructed by  a kernel function $k_{\theta_i}(\cdot, \cdot)$. Usually $\mu^A = 0$, $\mu^B = 0$. Note that is common to add in the diagonal of the covariance the data noise $\sigma_i(t_j)^2$ if it is considered.</p>
 <p>Our proposed decoder is based on the contrary idea of Gaussian processes. Instead of assuming that the observed data generates a Gaussian process to predict data, we assume that exist an underlying process that generates the data.</p>
-<p>This  &ldquo;underlying process&rdquo; is estimated using an autoencoding procedure. We encode the available data into latent variables and we use a neural network decoder afterward that estimates the $B$ variables: $\mu_{\text{data}}$ estimated directly by the NN (this are the induction points as blue circles) and $\Sigma^{B,B}$, $\Sigma^{A,B}$, $\Sigma^{B,A}$ by estimating the parameters $\theta$ of the kernel function $k_{\theta_i}(\cdot, \cdot)$. These variables along are used to predict $\mu^{A|B}$ and $\Sigma^{A|B}$.</p>
+<p>This  &ldquo;underlying process&rdquo; is estimated using an autoencoding procedure. We encode the available data into latent variables and we use a neural network decoder afterward that estimates the $B$ variables: $\mu_{\text{data}}$ estimated directly by the NN (this are the induction points as blue circles) and $\Sigma^{B,B}$, $\Sigma^{A,B}$, $\Sigma^{B,A}$ are constructed by estimating the parameters $\theta$ of the kernel function $k_{\theta_i}(\cdot, \cdot)$. These covariances along with $\mu_{\text{data}}$ are used to predict $\mu^{A|B}$ and $\Sigma^{A|B}$.</p>
 <p>We use exponential quadratic kernel with parameters defined as $\theta_i^{\text{kernel}} = (\sigma_{\theta_i}, l_{\theta_i})$, estimated by $p(\theta^{\text{kernel}}|z)$ and learned through backpropagation.</p>
 <p>$$
 k_{\theta_i}(t, t^{\text{ind}}_j ) =\sigma_{\theta_i}^2 \exp \left(- \frac{||t-t^{\text{ind}}_j ||^2 }{2l_{\theta_i}^2}\right),
 $$</p>
-<p>where $t^{\text{ind}}_j$ times associated to fixed times (usually a linspace in certain range) and $t$ are the observed times. We additionally can estimate the noise of the covariance $\hat{\sigma}_{i}(t^{\text{ind}}_j))^2$. We can obtained a posterior distribution that estimates the obervsed data $x$ at times $t$. Writting similar as before can obtained a closed form solution of such posterior distribution:</p>
+<p>where $t^{\text{ind}}_j$ times are associated to fixed times (usually times regularly sampled in certain range, these times are the same for all data points $i$) and $t$ are the observed times. We additionally can estimate the noise of the covariance $\hat{\sigma}_{i}(t^{\text{ind}}_j))^2$ with a NN. We can obtain a posterior distribution that estimates the obervsed data $x$ at times $t$. Writting similar as before can obtained a closed form solution of such posterior distribution:</p>
 <p>$$
 p(\hat{x}|  \hat{x}^{\text{ind}}, t^{\text{ind}}, t) = \mathcal{N}(\hat{\mu},\hat{\Sigma})
 $$
@@ -327,7 +337,7 @@ $$
 $$
 \hat{\Sigma} =\hat{\Sigma}^{\text{obs}, \text{obs}} - \hat{\Sigma}^{\text{obs}, \text{ind}} (\hat{\Sigma}^{\text{ind}, \text{ind}})^{-1}\hat{\Sigma}^{\text{ind}, \text{obs}}
 $$</p>
-<p>Note we can maximize the likelihood of $p(\hat{x}|  \hat{x}^{\text{ind}}, t^{\text{ind}}, t)$ using the observed data $x$.</p>
+<p>Note we can maximize the likelihood of $p(\hat{x}|  \hat{x}^{\text{ind}}, t^{\text{ind}}, t)$ (red box in the image below) using the observed data $x$.</p>
 <p>The complete procedure should look something like this:
 <img src="https://jumpynitro.github.io/blog/img/AGP/AE_Gauss-1.png" alt="MPCC_diag2"></p>
 

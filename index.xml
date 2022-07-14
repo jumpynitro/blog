@@ -44,16 +44,6 @@
     </item>
     
     <item>
-      <title></title>
-      <link>https://jumpynitro.github.io/blog/research/</link>
-      <pubDate>Sun, 03 Jul 2022 15:59:37 -0400</pubDate>
-      
-      <guid>https://jumpynitro.github.io/blog/research/</guid>
-      <description>There is a lot of current work from my thesis that I have not published yet. I currently working with Pablo Huijse, Pavlos Prototopapas and Pablo Estvéz to make this work available as papers. You can have an idea of this work here. The following work is already published.
-Publications  Nicolas Astorga, Pablo Huijse, Pavlos Protopapas and Pablo A. Estévez. “MPCC: Matching Priors and Conditionals for clustering”, European Conference on Computer Vision (ECCV), Glasglow, 2020.</description>
-    </item>
-    
-    <item>
       <title>Contact</title>
       <link>https://jumpynitro.github.io/blog/categories123/</link>
       <pubDate>Sun, 03 Jul 2022 15:59:37 -0400</pubDate>
@@ -73,12 +63,22 @@ Research interests I think to develop such general models it is necesary to lear
     </item>
     
     <item>
+      <title>Research</title>
+      <link>https://jumpynitro.github.io/blog/research/</link>
+      <pubDate>Sun, 03 Jul 2022 15:59:37 -0400</pubDate>
+      
+      <guid>https://jumpynitro.github.io/blog/research/</guid>
+      <description>There is a lot of current work from my thesis that I have not published yet. I currently working with Pablo Huijse, Pavlos Protopapas and Pablo Estévez to make this work available as papers. You can have an idea of this work here. The following work is already published.
+Publications  Nicolas Astorga, Pablo Huijse, Pavlos Protopapas and Pablo A. Estévez. “MPCC: Matching Priors and Conditionals for clustering”, European Conference on Computer Vision (ECCV), Glasglow, 2020.</description>
+    </item>
+    
+    <item>
       <title>Working at ALeRCE</title>
       <link>https://jumpynitro.github.io/blog/industry/</link>
       <pubDate>Sun, 03 Jul 2022 15:59:37 -0400</pubDate>
       
       <guid>https://jumpynitro.github.io/blog/industry/</guid>
-      <description>Currently, I am working part-time in ALeRCE (Automatic Learning for the Rapid Classification of Events) as machine learning engineer. ALeRCE is a Chilean-led broker that process alert streams of astronomical data. The amount of astronomical data is huge and automonous mecanisms are necesary to detect new interesting astronoimcal objects, since (sadly) we can not put a bunch of astronomers to look images of the sky. Being part of ALeRCE is my closest attempt to engineering, and it has been an entertaining journey.</description>
+      <description>Currently, I am working part-time in ALeRCE (Automatic Learning for the Rapid Classification of Events) as machine learning engineer. ALeRCE is a Chilean-led broker that process alert streams of astronomical data. The amount of astronomical data is huge and autonomous mechanisms are necessary to detect new interesting astronoimcal objects (note, we can not put a bunch of astronomers to look images of the sky). Being part of ALeRCE is my closest attempt to engineering, and it has been an entertaining journey.</description>
     </item>
     
     <item>

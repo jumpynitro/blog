@@ -238,6 +238,16 @@ if (!doNotTrack) {
     </a>
   </li>
 
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/MSThesisEE.pdf" title="MS Thesis EE">
+    
+      <i class="sidebar-button-icon fas fal fa-book-reader" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">MS Thesis EE</span>
+    </a>
+  </li>
+
 
     </ul>
     <ul class="sidebar-buttons">
@@ -294,12 +304,12 @@ if (!doNotTrack) {
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <p><strong>Clustering</strong> is a fundamental task in unsupervised learning that depends heavily on the data representation that is used. Deep generative models have appeared as a promising tool to learn informative low-dimensional data representations. In this blog we will dismitify MPCC, a generative model for clustering that <strong>we published on ECCV2020</strong>.</p>
+              <p><strong>Clustering</strong> is a fundamental task in unsupervised learning that depends heavily on the data representation that is used. Deep generative models have appeared as a promising tool to learn informative low-dimensional data representations. In this blog we will dismitify MPCC, a generative model for clustering that we <a href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123680647.pdf">published on ECCV2020</a>. <a href="https://github.com/jumpynitro/MPCC">[code]</a></p>
 <p><strong>Matching Priors and Conditionals for Clustering (MPCC)</strong> is a GAN-based model with an encoder to infer latent variables and cluster categories from data, and a flexible decoder to generate samples from a conditional latent space. MPCC is obtained through mathematical derivation and allows us to generate samples from different clusters in an unsupervised manner:</p>
 <p><img src="https://jumpynitro.github.io/blog/img/samples_cifar.png" alt="samples_cifar">
 (Every two columns a different cluster)</p>
 <h3 id="background">Background</h3>
-<p>The idea of MPCC comes from a matching joint distribution optimization framework. To understand the intuition of what does it that means, let denote some notation:</p>
+<p>The idea of MPCC comes from a matching joint distribution optimization framework. To understand the intuition of what does it that means, let me denote some notation:</p>
 <ul>
 <li>Let $\boldsymbol{q(x)}$ be the true data distribution, where $x \in \mathcal{X}$ the observed variable.</li>
 <li>Let $\boldsymbol{p(z)}$ the prior of the latent distribution, where $z \in \mathcal{Z}$ the latent variable.</li>
@@ -314,10 +324,10 @@ if (!doNotTrack) {
 <p>If $\boldsymbol{q(x) \approx p(x) = \mathbb{E}_{p(z)}[p(x|z)]}$ we have a decoder, $\boldsymbol{p(x|z)}$, that allows us to generate realistic data. In other words, $\boldsymbol{p(x)}$, the distribution obtained from all the decoded samples from the prior should follow the true data distribution $\boldsymbol{q(x)}$ that we established.</p>
 </li>
 </ul>
-<p>Previous works have also noted that VAE&rsquo;s loss function can be obtained by expanding $\boldsymbol{D_{KL}(q(x,z)||p(x,z))}$. In this current work we analize more in depth what models can be obtained through this perspective. In MPCC, it is shown that VaDE can be obtained minimizing $\boldsymbol{D_{KL}(q(x,z)||p(x,z))}$, and in AIM models they showed a model obtained by minimizing $\boldsymbol{D_{KL}(p(x,z)||q(x,z))}$. MPCC borns from the motivation of minimizing $\boldsymbol{D_{KL}(p(x,z,y)||q(x,z,y))}$.</p>
-<p>Before we continue, it is important to have an intuition of the advantages of three variable models ($\boldsymbol{x,z,y}$) over two variable models ($\boldsymbol{x,z}$). In three variable models we are assuming the existence of a third latent variable $\boldsymbol{y}$ and a corresponding prior $\boldsymbol{p(y)}$. Since  $\boldsymbol{y}$ is categorical, we are forcing the existence of an inference model $\boldsymbol{q(y|z)}$, which is obtained by deriving some KL divergence. In other words, we have an inference model that infers categories by encoding observed data $\boldsymbol{x \sim q(x)}$, and a generative model that generate realistic data by sampling from a categorical distribution  $\boldsymbol{y \sim p(y)}$.</p>
+<p><a href="https://arxiv.org/abs/1806.06514">Previous works</a> have also noted that <a href="https://arxiv.org/abs/1312.6114">VAE&rsquo;s</a> loss function can be obtained by expanding $\boldsymbol{D_{KL}(q(x,z)||p(x,z))}$. In this current work we analize more in depth what models can be obtained through this perspective. In <a href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123680647.pdf">MPCC</a>, it is shown that <a href="https://arxiv.org/abs/1611.05148">VaDE</a> can be obtained minimizing $\boldsymbol{D_{KL}(q(x,z)||p(x,z))}$, and in AIM models they showed a model obtained by minimizing $\boldsymbol{D_{KL}(p(x,z)||q(x,z))}$. MPCC borns from the motivation of minimizing $\boldsymbol{D_{KL}(p(x,z,y)||q(x,z,y))}$.</p>
+<p>Before we continue, it is important to have an intuition of the advantages of <strong>three variable models</strong> ($\boldsymbol{x,z,y}$) over <strong>two variable models</strong> ($\boldsymbol{x,z}$). In three variable models we are assuming the existence of a third categorical latent variable $\boldsymbol{y}$ and a corresponding prior $\boldsymbol{p(y)}$. Since  $\boldsymbol{y}$ is categorical, we are forcing the existence of an inference model $\boldsymbol{q(y|z)}$. In other words, we have an inference model that infers categories by encoding observed data $\boldsymbol{x \sim q(x)}$, and a generative model that generate realistic data by sampling from a categorical distribution  $\boldsymbol{y \sim p(y)}$.</p>
 <h3 id="matching-priors-and-conditional-for-clustering">Matching priors and conditional for clustering</h3>
-<p>To derive MPCC, first we need to establish how the inference model  $\boldsymbol{q(x,z,y)}$ and the generative models  $\boldsymbol{p(x,z,y)}$ will be decomposed (the independence assumptions are explained in the paper).</p>
+<p>To derive MPCC, first we need to establish how the inference model  $\boldsymbol{q(x,z,y)}$ and the generative models  $\boldsymbol{p(x,z,y)}$ will be decomposed (the independence assumptions are explained in the <a href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123680647.pdf">paper</a>).</p>
 <ul>
 <li>$\boldsymbol{q(x,z,y) = q(x)q(z|x)q(y|z)}$</li>
 <li>$\boldsymbol{p(x,z,y) = p(x|z,y)p(z|y)p(y)}$</li>
@@ -332,18 +342,19 @@ $$
 $$</p>
 <p>The loss function of the right hand side can be minimized with closed form solution for the majority of their terms when assuming Gaussian distribution for $\boldsymbol{p(z|y)}$. Note that $\boldsymbol{p(z|y = c)}$ is basically a Gaussian for each cluster/categoy $\boldsymbol{c}$. And although they look quite criptic we can interpret them quite easily:</p>
 <ul>
-<li><strong>Loss I</strong>: In the paper, we minimize $\boldsymbol{D_{KL}(p(x)||q(x))}$ adversarially instead of $\boldsymbol{D_{KL}(p(x|z,y)||q(x))}$. You probably think that minimize the first term instead fo the second is cheating but in this work we explore the differences between both measures. With this optimization we learn a decoder that aproximate the real distribution of the data.</li>
+<li><strong>Loss I</strong>: In the paper, we minimize $\boldsymbol{D_{KL}(p(x)||q(x))}$ adversarially instead of $\boldsymbol{D_{KL}(p(x|z,y)||q(x))}$. You probably think that minimize the first term instead fo the second is cheating but in my <a href="https://jumpynitro.github.io/blog/MSThesisEE.pdf">thesis</a> we explore the differences between both measures. With this optimization we learn a decoder that aproximate the real distribution of the data.</li>
 <li><strong>Loss II</strong>: Maximizing the likelihood $\boldsymbol{q(z|x = \tilde{x}_i)}$ is equivalent to train an encoder ($\boldsymbol{q(z|x)}$) that identifies the sample $\boldsymbol{z_i \sim p(z)}$ that generated  $\boldsymbol{\tilde{x}_i}$.  Maximizing the likelihood $\boldsymbol{q(y|z = z_i)}$ is equivalent to train a classifier ($\boldsymbol{q(y|z = z_i)}$) that identifies the sample $\boldsymbol{y_i \sim p(y)}$  that generates $\boldsymbol{z_i \sim p(z|y=y_i)}$. This last optimization separates each conditional distribution  $\boldsymbol{p(z|y=c_k)}$ from the other, helping the clustering capabilities of the model.</li>
 <li><strong>Loss III</strong>: These loss functions are basically entropies that help that latent varibles don&rsquo;t collapse in local optimas.</li>
 </ul>
-<p>Assumming Gaussian distribution for each each conditinal distribution  $\boldsymbol{p(z|y=c) = \mathcal{N}(\mu_{c}, \sigma^2_{c}) }$, MPCC&rsquo;s functioning can be observed as follows:</p>
+<p>Assumming Gaussian distribution for each conditional distribution  $\boldsymbol{p(z|y=c) = \mathcal{N}(\mu_{c}, \sigma^2_{c}) }$, MPCC&rsquo;s functioning can be observed as follows:</p>
 <p><img src="https://jumpynitro.github.io/blog/img/MPCC-diagram5-big3.png" alt="MPCC_diag2">
 Fig 1: MPCC diagram components.</p>
-<p>MPCC can also work as we shown in the paper:</p>
+<p>MPCC can also work for many clusters (CIFAR20 has 20 classes, and OMNIGLOT 100!) as we shown in the paper:</p>
 <p><img src="https://jumpynitro.github.io/blog/img/Add_samples_C20.jpg" alt="MPCC_diag3">
 (Every row a different cluster)</p>
 <p><img src="https://jumpynitro.github.io/blog/img/Add_samplesOmni.jpg" alt="MPCC_diag4">
 (Every row a different cluster)</p>
+<p>For more results please refer to the <a href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123680647.pdf">paper</a>.</p>
 
               
 

@@ -238,6 +238,16 @@ if (!doNotTrack) {
     </a>
   </li>
 
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/MSThesisEE.pdf" title="MS Thesis EE">
+    
+      <i class="sidebar-button-icon fas fal fa-book-reader" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">MS Thesis EE</span>
+    </a>
+  </li>
+
 
     </ul>
     <ul class="sidebar-buttons">
@@ -294,16 +304,18 @@ if (!doNotTrack) {
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <p><strong>LGAd</strong>  a generative model for variable length and irregularly sampled times series. As a variational model the loss function of the model is obtained by maximizing a bound from the  likelihood $\boldsymbol{\mathbb{E}_{q(x)}[\log p(x)]}$. For anomaly detection we used  $\boldsymbol{\hat{\mathcal{I}}(z,y|\cdot)}$, a bound of the mutual information (MI) between the continuous latent variables $\boldsymbol{z}$ and the categorical latent variables $\boldsymbol{y}$. From some input $\boldsymbol{x_i}$ a lower MI bound means the our codification $\boldsymbol{z_i}$ is not that correlated with our categorical variables $\boldsymbol{y}$ (Anomalous, or outlier). On the contrary, a higher MI bound means the our codification $\boldsymbol{z_i}$ is correlated with our categorical variables $\boldsymbol{y}$ (inlier). In the following, we show how it looks the MI bound using astronomical data.</p>
+              <p><strong>LGAd</strong>  is a variational generative model for variable length and irregularly sampled times series. As a variational model the loss function is obtained by maximizing a bound from the  likelihood $\boldsymbol{\mathbb{E}_{q(x)}[\log p(x)]}$.</p>
+<p>For anomaly detection we used  $\boldsymbol{\hat{\mathcal{I}}(z,y|\cdot)}$, a bound of the mutual information (MI) between the continuous latent variables $\boldsymbol{z}$ and the categorical latent variables $\boldsymbol{y}$. From some input $\boldsymbol{x_i}$, a low MI bound means that our codification $\boldsymbol{z_i}$ is not correlated with our categorical variables $\boldsymbol{y}$ (Anomalous, or outlier). On the contrary, a high MI bound means that our codification $\boldsymbol{z_i}$ is correlated with our categorical variables $\boldsymbol{y}$ (inlier).</p>
+<p>In the following, we show how it looks the MI bound using astronomical data. For more details take a look to my <a href="https://jumpynitro.github.io/blog/MSThesisEE.pdf">Master thesis</a> (in my thesis this model is called TS-VaDE).</p>
 <p><img src="https://jumpynitro.github.io/blog/img/LGAd/MI_hist_delta-1.png" alt="MI_delta"></p>
 <h3 id="model">Model</h3>
-<p>The graphical model <strong>LGAd</strong> is:</p>
+<p>The graphical model of <strong>LGAd</strong> is:</p>
 <ul>
 <li>$p(x,z,y,f|t) = p(x|z,t)p(z|y)p(f|y)p(y)$</li>
 <li>$q(x,z,y,f,t) = q(x,f,t)q(z|x,t)q(y|z,f)$,</li>
 </ul>
-<p>where $\boldsymbol{x \in \mathcal{X}}$ is the observed variable, $\boldsymbol{t \in T}$ are the times associated to the observed variable $\boldsymbol{x}$, $\boldsymbol{z \in \mathcal{Z}}$ latent variable, $\boldsymbol{y \in \mathcal{Y}}$ categorical latent variable and $\boldsymbol{f \in \mathcal{F}}$ is a metadata variable that can helps for classification but is not worthy to compress in a latent variable $\boldsymbol{z}$.</p>
-<p>In practice we found that using labeled data improve the performance so the include a cross-entropy term between the logits and the true labels. The loss function of LGAd can be summarized as follow:</p>
+<p>where $\boldsymbol{x \in \mathcal{X}}$ is the observed variable, $\boldsymbol{t \in T}$ are the times associated to the observed variable $\boldsymbol{x}$, $\boldsymbol{z \in \mathcal{Z}}$ is the latent variable, $\boldsymbol{y \in \mathcal{Y}}$ is the categorical latent variable and $\boldsymbol{f \in \mathcal{F}}$ is a metadata variable that helps in classification but is not worthy to compress in a latent variable $\boldsymbol{z}$.</p>
+<p>In practice we found that using labeled data improve the outlier detection performance so we include a cross-entropy term between the logits and the true labels. The loss function of LGAd can be summarized as follow:</p>
 <p>$$
 \mathcal{L}^{\text{LGAd-supervised}} = \mathcal{L}^{\text{LGAd-unsupervised}} + h(y, \tilde{y}),
 $$</p>
@@ -320,16 +332,16 @@ $$
 $$
 ~ + h(y|z) + h(z|x) \equiv -\mathcal{L}^{\text{LGAd-unsupervised}},
 $$</p>
-<p>where $\mathbb{E}_{q(x,t)q(z|x,t)}[[\log p(x|z,t)]$ is the likelihood of the decoder (reconstruction error), $\mathbb{E}_{q(y|z,f)}[\log p(z|y)]$, $\mathbb{E}_{q(f)q(y|z,f)}[\log p(f|y)]]$,  $\mathbb{E}_{q(y)}[\log p(y)]$ are likelihoods of the encoded latent variables over the priors of the generative model. Finally the last terms are entropy terms that are maximized in order to reach non trivial solutions. A diagram of the all training procedure is shown as follows:</p>
+<p>where $\mathbb{E}_{q(x,t)q(z|x,t)}[[\log p(x|z,t)]$ is the likelihood of the decoder (reconstruction error), $\mathbb{E}_{q(y|z,f)}[\log p(z|y)]$, $\mathbb{E}_{q(f)q(y|z,f)}[\log p(f|y)]]$,  $\mathbb{E}_{q(y)}[\log p(y)]$ are likelihoods of the encoded latent variables over the priors of the generative model. Finally the last terms are entropy terms that are maximized in order to reach non trivial solutions. A diagram of all training procedure is shown as follows:</p>
 <p><img src="https://jumpynitro.github.io/blog/img/LGAd/LCVaDE-1.png" alt="MI_gen"></p>
-<p>For anomaly detection we proposed a new anomaly score called IAS. IAS consists in measuring the correlation between the latent variables $\boldsymbol{z}$ and $\boldsymbol{y}$ using a estimate of true mutal information $\boldsymbol{\mathcal{I}}(z,y|\cdot)$. This mutual information is approximated as follows:
+<p>For anomaly detection we proposed a new anomaly score called <strong>IAS (Information anomaly score)</strong>. <strong>IAS</strong> consists in measuring the correlation between the latent variables $\boldsymbol{z}$ and $\boldsymbol{y}$ using an estimate of true mutal information $\boldsymbol{\mathcal{I}}(z,y|\cdot)$. This mutual information is approximated as follows:
 $$
 \mathcal{I}(z,y|x,f) = \mathbb{E}_{q(z,y|x,f)}[\log p(z|y)] + h(z|x)  + \mathbb{E}_{q(y)}[D_{KL}(q(z|y) || p(z|y) )]
 $$
 $$
 \geq \mathbb{E}_{q(z,y|x,f)}[\log p(z|y)] + h(z|x) \equiv \text{IAS}(x),~~~~~~~
 $$</p>
-<p>More results are in my thesis, but we are working to publish a paper with this models and anomaly score.</p>
+<p>More results are in my <a href="https://jumpynitro.github.io/blog/MSThesisEE.pdf">Master thesis</a>, but we are working to publish a paper with this model and anomaly score.</p>
 
               
 

@@ -238,6 +238,16 @@ if (!doNotTrack) {
     </a>
   </li>
 
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/MSThesisEE.pdf" title="MS Thesis EE">
+    
+      <i class="sidebar-button-icon fas fal fa-book-reader" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">MS Thesis EE</span>
+    </a>
+  </li>
+
 
     </ul>
     <ul class="sidebar-buttons">
@@ -294,30 +304,32 @@ if (!doNotTrack) {
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <p>The work presented in this vlog is still in progress and summarizes my thesis&rsquo;s chapters 3 and 4.</p>
+              <p>The work presented in this blog is still in progress and summarizes my <a href="https://jumpynitro.github.io/blog/MSThesisEE.pdf">thesis&rsquo;s</a> chapters 3 and 4.</p>
 <h3 id="foundation-of-generative-inference-models">Foundation of generative-inference models</h3>
-<p>We will refer as generative-inference models to every model that considers a generative model $\boldsymbol{p}$ and an inference model $\boldsymbol{q}$. For these models, in general we will consider two variables: $\boldsymbol{x \in \mathcal{X}}$ and $\boldsymbol{z \in \mathcal{Z}}$, $\boldsymbol{\mathcal{X}}$ being the observable space and $\boldsymbol{\mathcal{Z}}$ being a latent low-dimensional manifold space. When two variables are considered the joint distributions are $\boldsymbol{p(x,z)}$ and $\boldsymbol{q(x,z)}$. The generative model $\boldsymbol{p(x,z)=p(x|z)p(z)}$ is decomposed in a prior distribution $\boldsymbol{p(z)}$ and a decoder $\boldsymbol{p(x|z)}$ usually modeled as a neural network (NN).</p>
+<p>We will refer as generative-inference models to every model that considers a generative model $\boldsymbol{p}$ and an inference model $\boldsymbol{q}$. For these models, in general we will consider two variables: $\boldsymbol{x \in \mathcal{X}}$ and $\boldsymbol{z \in \mathcal{Z}}$, $\boldsymbol{\mathcal{X}}$ being the observable space and $\boldsymbol{\mathcal{Z}}$ being a latent low-dimensional manifold space.</p>
+<p>When two variables are considered the joint distributions are $\boldsymbol{p(x,z)}$ and $\boldsymbol{q(x,z)}$. The generative model $\boldsymbol{p(x,z)=p(x|z)p(z)}$ is decomposed in a prior distribution $\boldsymbol{p(z)}$ and a decoder $\boldsymbol{p(x|z)}$ usually modeled as a neural network (NN). The inference model $\boldsymbol{q(x,z)=q(x)q(z|x)}$ is decomposed in the true underlying distribution of the data $\boldsymbol{q(x)}$ and an encoder $\boldsymbol{q(z|x)}$ usually modeled as a NN that codifies the data</p>
 <p>In the following a diagram of the generative and inference models.</p>
 <p><img src="https://jumpynitro.github.io/blog/img/GIM1/GIM_ex1.png" alt="GIM_ex1">
-In the left hand size the generative model in green. In the right hand side, the inference in blue.</p>
-<p>As the generative-inference models have a generative model and an inference model we can expect them to have representation learning capablities as well as generative capabitilies. The following properties summarized the contruction of generative-inference models.</p>
+In the left hand size the generative model in green. In the right hand side, the inference model in blue.</p>
+<p>As the generative-inference models have a generative model and an inference model we can expect them to have representation learning capablities as well as generative capabitilies. The following properties summarize this desired behaviour.</p>
 <ul>
 <li><strong>Desired property 1</strong>. <em>The marginal distributions of generative-inference models should match i.e. $q(z), p(z)$ should be equal and $p(x), q(x)$ should be equal.</em></li>
 <li><strong>Desired property 2</strong>. <em>Data  $x_i \in \mathcal{X}$ sampled from the empirical data distribution $q_{\delta}(x)$ should have a high correlation with its codified version $z(x_i) \in \mathcal{Z}$ in the latent space.</em></li>
 </ul>
-<p><strong>Desired property 1</strong> is a restriction given by the graphical models $p$ and $q$. The inferred marginal distribution $q(z)$ should follow the prior distribution $p(z)$, which can help for representation learning. For example, in MPCC $\boldsymbol{p(z) = \sum_y^K p(z|y)p(y)}$ allowing clustering capablities. Additional the generated marginal distribution $p(x)$ should follow the real distribution $q(x)$ <em>i.e</em> the model generates realistic data.</p>
-<p><strong>Desired property 2</strong> tells us about the representation learning capabilities of the model. If the codified version $z(x_i)$ of the data $x_i \sim q_{\delta}(x)$ is well represented in the latent space this would mean that a simpler classifier can be trained in the lower dimensional space $\mathcal{Z}$. We study the mutual information perspective by bounding it with likelihoods $\mathbb{E}_{q(x)}[\log p(x|z)]$ or $\mathbb{E}_{p(z)}[\log q(z|x)]$, which is related with generative models as we will see in this post. This approach is different from previous work.</p>
+<p><strong>Desired property 1</strong> is a restriction given by the graphical models $p$ and $q$. The inferred marginal distribution $q(z)$ should follow the prior distribution $p(z)$, which can help for representation learning. For example, in <a href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123680647.pdf">MPCC</a>, $\boldsymbol{p(z) = \sum_y^K p(z|y)p(y)}$ allowing clustering capablities. Additional the generated marginal distribution $p(x)$ should follow the real distribution $q(x)$ <em>i.e</em> the model generates realistic data.</p>
+<p><strong>Desired property 2</strong> tells us about the representation learning capabilities of the model. If the codified version $z(x_i)$ of the data $x_i \sim q_{\delta}(x)$ is well represented in the latent space this would mean that a simpler classifier can be trained in the lower dimensional space $\mathcal{Z}$. We will study a <a href="https://jumpynitro.github.io/blog/2022/07/gim2/">mutual information perspective</a> by bounding it with likelihoods $\mathbb{E}_{q(x)}[\log p(x|z)]$ or $\mathbb{E}_{p(z)}[\log q(z|x)]$, which is related with generative models as we will see in this post. This approach is different from previous work.</p>
 <h3 id="how-to-obtain-desired-properties-1-and-2">How to obtain desired properties 1 and 2.</h3>
 <p>Desired properties 1 and 2 can be achieved by matching the joint distributions $\boldsymbol{p(x,z)}$ and $\boldsymbol{q(x,z)}$. If the joint distributions are equal then:</p>
 <ul>
 <li>The marginal distributions $p(x)$, $q(x)$ and $q(z)$, $p(z)$ are equal too (<strong>desired property 1</strong>). This is easy to observe by integrating one variable <em>i.e.</em> $\int_z p(x,z) dz = \int_z q(x,z) dz \equiv p(x) = q(x)$ and $\int_x p(x,z) dx = \int_x q(x,z) dx \equiv p(z) = q(z)$.</li>
-<li>The conditionals distributions are also equivalent as we can observe mathematically $q(x,z)/q(z) = p(x,z)/p(z) \equiv q(x|z) = p(x|z)$ and $q(x,z)/q(x) = p(x,z)/p(x) \equiv q(z|x) = p(z|x)$. If this occurs using deterministic conditional distributions we would obtain perfect reconstructions as shown here (<strong>desired property 2</strong>).</li>
+<li>The conditionals distributions are also equivalent as we can observe mathematically $q(x,z)/q(z) = p(x,z)/p(z) \equiv q(x|z) = p(x|z)$ and $q(x,z)/q(x) = p(x,z)/p(x) \equiv q(z|x) = p(z|x)$. If this occurs using deterministic conditional distributions we would obtain perfect reconstructions as shown in <a href="https://arxiv.org/abs/1605.09782?context=cs">BiGAN</a> (<strong>desired property 2</strong>).</li>
 </ul>
-<p>The literature shows two different ways of matching the joint distributions. The first way is by matching the joint distributions adversarially as shown here, here or here. The second way is based on decomposing the matching of the joint distributions in simpler terms using KL divergence.</p>
+<p>The literature shows two different ways of matching the joint distributions. The first way is by matching the joint distributions adversarially as shown in <a href="https://arxiv.org/abs/1605.09782?context=cs">BiGAN</a>, <a href="https://arxiv.org/abs/1606.00704">ALI</a> or <a href="https://www.deepmind.com/open-source/bigbigan">BigBiGAN</a>. The second way is based on decomposing the matching of the joint distributions in simpler terms using KL divergence.</p>
 <h4 id="matching-qxz-and-pxz-adversarially">Matching $q(x,z)$ and $p(x,z)$ adversarially</h4>
-<p>The originally the objective of GANs is to match the marginal distribution $q(x)$ and $p(x)$ but it can be extended to match the joint distribution $q(x,z)$ and $p(x,z)$ as original done from these guys and these guys. The training is quite similar and have same theoretical guaranties. A diagram of this type of training can be observed as follows.</p>
+<p>The originally the objective of <a href="https://arxiv.org/abs/1406.2661?context=cs">GANs</a> is to match the marginal distribution $q(x)$ and $p(x)$ but it can be extended to match the joint distribution $q(x,z)$ and $p(x,z)$ as original done in <a href="https://arxiv.org/abs/1605.09782?context=cs">BiGAN</a> and <a href="https://arxiv.org/abs/1606.00704">ALI</a>. The training is quite similar and have the same theoretical guaranties. A diagram of this type of training can be observed as follows.</p>
 <p><img src="https://jumpynitro.github.io/blog/img/GIM1/advjoint.png" alt="adv_joints"></p>
 <h4 id="minimizing-d_klqxzpxz-by-decomposing-it">Minimizing $D_{KL}(q(x,z)||p(x,z))$ by decomposing it</h4>
+<p>It also possible to math joint distribution by decomposing the KL divergence the model&rsquo;s distribution.</p>
 <p>We start by decomposing the KL divergence of the joints $q(x,z)$ and $p(x,z)$ as follows:</p>
 <p>$$
 D_{KL}(q(x,z) ||p(x,z)) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -328,9 +340,9 @@ $$
 $$
 ~ = ~ \mathbb{E}_{q(x)}\mathbb{E}_{q(z|x)}[  -  \log p(x|z)    ] - h_q(x) + \mathcal{I}_q(x,z) + D_{KL}(q(z)|| p(z) )~~~~~(2),
 $$</p>
-<p>This divergence can be decomposed as in Eq. (1) or Eq. (2). Eq. (1) is optimized by Variational Autoencoders (VAEs) with the exception of the entropy term $h_q(x)$. $\beta$-VAE and Adversarial Variational Bayes (AVB) also follow (1) modifying the optimization of $D_{KL}(q(z|x)||p(z))$, in particular $\beta$-VAE adds a constant to the KL-divergence term and AVB replaces it with adversarial training.</p>
-<p>Other methods can be associated with (2) by replacing $D_{KL}(q(z)||p(z))$ with similar objectives. Info-VAE, Adversarial Autoencoders (AAEs), Wasserstein Autoencoders (WAEs) have followed this approach using adversarial training or maximum mean discrepancy between the marginal distributions. These models don&rsquo;t explicitly optimize $\mathcal{I}_q(x,z)$ and thus the entropy term $h_q(z|x)$, which is included in $\mathcal{I}_q(x,z)$.</p>
-<p>In the following a diagram that encapsulates the concept in equation (1):
+<p>This divergence can be decomposed as in Eq. (1) or Eq. (2). Eq. (1) is optimized by Variational Autoencoders (<a href="https://arxiv.org/abs/1312.6114">VAE</a>) with the exception of the entropy term $h_q(x)$. <a href="https://openreview.net/forum?id=Sy2fzU9gl">[$\beta$-VAE]</a> and Adversarial Variational Bayes (<a href="https://arxiv.org/abs/1701.04722">AVB</a>) also follow (1) modifying the optimization of $D_{KL}(q(z|x)||p(z))$, in particular <a href="https://openreview.net/forum?id=Sy2fzU9gl">[$\beta$-VAE]</a> adds a constant to the KL-divergence term and AVB replaces it with adversarial training.</p>
+<p>Other methods can be associated with (2) by replacing $D_{KL}(q(z)||p(z))$ with similar objectives. <a href="https://arxiv.org/abs/1706.02262">Info-VAE</a>, Adversarial Autoencoders (<a href="https://arxiv.org/abs/1511.05644?context=cs">AAEs</a>), Wasserstein Autoencoders (<a href="https://arxiv.org/abs/1711.01558">WAEs</a>) have followed this approach using adversarial training or maximum mean discrepancy between the marginal distributions. These models don&rsquo;t explicitly optimize $\mathcal{I}_q(x,z)$ and thus the entropy term $h_q(z|x)$, which is included in $\mathcal{I}_q(x,z)$.</p>
+<p>In the following, a diagram that encapsulates equation (1):
 <img src="https://jumpynitro.github.io/blog/img/GIM1/DecJointsiKL.png" alt="JointInf"></p>
 <h4 id="minimizing-d_klpxzqxz-by-decomposing-it">Minimizing $D_{KL}(p(x,z)||q(x,z))$ by decomposing it</h4>
 <p>We start by decomposing the KL divergence of the joints $p(x,z)$ and $q(x,z)$ as</p>
@@ -343,9 +355,9 @@ $$
 $$
 ~ = ~ \mathbb{E}_{p(z)}\mathbb{E}_{p(x|z)}[  -  \log q(z|x)    ] - h_p(z) + \mathcal{I}_p(x,z) + D_{KL}(p(x)|| q(x) )~~~~~(4),
 $$</p>
-<p>The divergence $D_{KL}(p(x,z)||q(x,z))$ can be decomposed either as Eq. (3) or Eq. (4). Note that it is not possible to minimize  $\mathbb{E}_{p(z)} [D_{KL}(p(x|z)|| q(x)) ]$, the third term of Eq. (3), using a closed form solution since we don&rsquo;t have access to the $q(x)$ distribution. This could be optimized using adversarial training like AVB, but to the best of our knowledge this hasn&rsquo;t been explored in the literature. However in practice Eq. (4) has been optimized in AIM or Info-GAN (if $c = z$).</p>
+<p>The divergence $D_{KL}(p(x,z)||q(x,z))$ can be decomposed either as Eq. (3) or Eq. (4). Note that it is not possible to minimize  $\mathbb{E}_{p(z)} [D_{KL}(p(x|z)|| q(x)) ]$, the third term of Eq. (3), using a closed form solution since we don&rsquo;t have access to the $q(x)$ distribution. This could be optimized using adversarial training like AVB, but to the best of our knowledge this hasn&rsquo;t been explored in the literature. However in practice Eq. (4) has been optimized in <a href="https://openreview.net/forum?id=rJx_b3RqY7">AIM</a> or <a href="https://proceedings.neurips.cc/paper/2016/file/7c9d0b1f96aebd7b5eca8c3edaa19ebb-Paper.pdf">Info-GAN</a> (if $c = z$).</p>
 <h4 id="some-final-thoughts">Some final thoughts</h4>
-<p>In this vlog we showed how the loss function of current generative-inference models can be obtained by using a joint distribution matching perspective. However, it doesn&rsquo;t tell us anything about representation learning capabilities of the model. In the next vlog we will expand more on this idea.</p>
+<p>In this blog I showed how the loss function of current generative-inference models can be obtained by using a joint distribution matching perspective. However, it doesn&rsquo;t tell us anything about representation learning capabilities of the model. In the next <a href="https://jumpynitro.github.io/blog/2022/07/gim2/">blog</a> we will expand more on this idea.</p>
 
               
 
