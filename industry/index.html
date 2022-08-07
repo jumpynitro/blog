@@ -214,11 +214,11 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/MSThesisEE.pdf" title="MS Thesis EE">
+      <a class="sidebar-button-link " href="https://jumpynitro.github.io/blog/MSThesisEE.pdf" title="MSc Thesis EE">
     
       <i class="sidebar-button-icon fas fal fa-book-reader" aria-hidden="true"></i>
       
-      <span class="sidebar-button-desc">MS Thesis EE</span>
+      <span class="sidebar-button-desc">MSc Thesis EE</span>
     </a>
   </li>
 
@@ -264,12 +264,12 @@ if (!doNotTrack) {
 <p>To train ML models we need to prepare training sets <em>i.e.</em> pairs of data $(x, y)$ (for the supervised learning). The $x$ is obtained through observatories or surveys that collect data from them, the labeled information is collected in a different way. In astronomy we only can obtain labels if someone (astronomers) have already classified some astronomical objects. This labeled information is saved as <strong>catalogs</strong> and we can have many <strong>catalogs</strong> even from the same survey.</p>
 <p>To create big training sets,  we need to extract the labeled information from various catalogs and combine them. In the following image I show a diagram of how we labeled data from some <em>data source</em>,</p>
 <p><img src="https://jumpynitro.github.io/blog/img/work/crossmatch.png" alt="crossmatch"></p>
-<p>The procedure basically consist in taking the <em>data source</em> and crossmatch it with some catalog. We know if an object (from the <em>data source</em>) have certain label if it is really close in distance with some object of the catalog <strong>i.e.</strong> these objects are the same.</p>
+<p>The procedure basically consists in taking the <em>data source</em> and crossmatch it with some catalog. We know if an object (from the <em>data source</em>) have certain label if it is really close in distance with some object of the catalog <strong>i.e.</strong> these objects are the same.</p>
 <p>Finally we can combine the results of many crossmatches creating our training sets.</p>
 <h3 id="putting-models-in-production">Putting models in production</h3>
 <p>One of the other task that I do in ALeRCE is putting models into production. As you can see in <a href="http://alerce.science/">ALeRCE</a>, this pipeline consists in basically:</p>
 <p><img src="https://jumpynitro.github.io/blog/img/work/pipeline.png" alt="pipeline"></p>
-<p>We communicate all of these steps (boxes) using <a href="https://kafka.apache.org/">Kafka</a>. I am usually involved in the steps that are inside of the orange dotted lines. To put some step in production We need to use Kafka to consume from topic, writting in databases (MongoDB and postgressSQL) to save our predictions and finally use docker with kubernetes to put our machine learning models into the pipeline.</p>
+<p>We communicate all of these steps (boxes) using <a href="https://kafka.apache.org/">Kafka</a>. I am usually involved in the steps that are inside of the orange dotted lines. To put some step in production, we need to use Kafka to consume from a topic and writting in databases (MongoDB and postgresSQL) to save our predictions. Finally we use docker with kubernetes to put our machine learning models into the pipeline.</p>
 
               
 
