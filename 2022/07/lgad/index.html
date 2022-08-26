@@ -336,7 +336,7 @@ $$</p>
 <p><img src="https://jumpynitro.github.io/blog/img/LGAd/LCVaDE-1.png" alt="MI_gen"></p>
 <p>For anomaly detection we proposed a new anomaly score called <strong>IAS (Information anomaly score)</strong>. <strong>IAS</strong> consists in measuring the correlation between the latent variables $\boldsymbol{z}$ and $\boldsymbol{y}$ using an estimate of true mutal information $\boldsymbol{\mathcal{I}}(z,y|\cdot)$. This mutual information is approximated as follows:
 $$
-\mathcal{I}(z,y|x,f) = \mathbb{E}_{q(z,y|x,f)}[\log p(z|y)] + h(z|x)  + \mathbb{E}_{q(y)}[D_{KL}(q(z|y) || p(z|y) )]
+\mathcal{I}(z,y|x,f) = \mathbb{E}_{q(z,y|x,f)}[\log p(z|y)] + h(z|x)  + \mathbb{E}_{q(x,y)}[D_{KL}(q(z|x,y) || p(z|y) )]
 $$
 $$
 \geq \mathbb{E}_{q(z,y|x,f)}[\log p(z|y)] + h(z|x) \equiv \text{IAS}(x),~~~~~~~
